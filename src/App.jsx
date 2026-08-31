@@ -379,7 +379,7 @@ function ColumnHeader({ color }) {
         gridTemplateColumns: GRID,
         gap: 6,
         alignItems: "center",
-        minWidth: 474,
+        minWidth: 350,
         padding: "0 4px 8px",
         color: COLORS.muted,
         fontSize: 8,
@@ -455,7 +455,7 @@ function PeriodRows({
     >
       <ColumnHeader color={color} />
 
-      <div style={{ minWidth: 474 }}>
+      <div style={{ minWidth: 350 }}>
         {rows.map((item, index) => {
           const achievement = pctRaw(
             item.achieved,
