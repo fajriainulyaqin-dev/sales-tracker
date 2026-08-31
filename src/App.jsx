@@ -1188,7 +1188,7 @@ export default function App() {
                   style={{
                     display: "grid",
                     gridTemplateColumns:
-                      "minmax(125px,1.7fr) 72px 72px 72px 72px",
+  "minmax(95px,1fr) 72px 72px 72px 72px",
                     gap: 6,
                     alignItems: "center",
                     minHeight: 45,
