@@ -1364,7 +1364,7 @@ export default function App() {
                 color={COLORS.blue}
               />
 
-              <div style={{ minWidth: 474 }}>
+              <div style={{ minWidth: 350 }}>
                 <div
                   style={{
                     display: "grid",
