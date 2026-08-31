@@ -534,6 +534,134 @@ function PeriodRows({
               {/* % PENCAPAIAN */}
               <div
                 style={{
+function PeriodRows({
+  rows,
+  color,
+  weight,
+  onTargetChange,
+}) {
+  const totalTarget = rows.reduce(
+    (sum, item) =>
+      sum + Number(item.target || 0),
+    0
+  );
+
+  const totalAchieved = rows.reduce(
+    (sum, item) =>
+      sum + Number(item.achieved || 0),
+    0
+  );
+
+  const totalPct = pctRaw(
+    totalAchieved,
+    totalTarget
+  );
+
+  const totalContribution =
+    (totalPct * weight) / 100;
+
+  return (
+    <div
+      style={{
+        overflowX: "auto",
+        WebkitOverflowScrolling: "touch",
+      }}
+    >
+      <ColumnHeader color={color} />
+
+      <div style={{ minWidth: 350 }}>
+        {rows.map((item, index) => {
+          const achievement = pctRaw(
+            item.achieved,
+            item.target
+          );
+
+          const contribution =
+            (achievement * weight) / 100;
+
+          return (
+            <div
+              key={index}
+              style={{
+                display: "grid",
+
+                /* KUNCI LAYOUT SEMUA BARIS */
+                gridTemplateColumns:
+                  "80px 55px 55px 60px 60px",
+
+                gap: 6,
+                alignItems: "center",
+                minHeight: 43,
+                padding: "5px 4px",
+                borderTop:
+                  index === 0
+                    ? "none"
+                    : `1px dotted ${COLORS.border}`,
+              }}
+            >
+              {/* LABEL */}
+              <div
+                style={{
+                  width: "80px",
+                  minWidth: "80px",
+                  maxWidth: "80px",
+                  boxSizing: "border-box",
+
+                  fontSize: 10,
+                  fontWeight: 650,
+                  color: COLORS.text,
+
+                  /* SEMUA LABEL RATA KIRI */
+                  textAlign: "left",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                {item.label}
+              </div>
+
+              {/* TARGET */}
+              <div>
+                <input
+                  type="number"
+                  value={item.target}
+                  onChange={(e) =>
+                    onTargetChange(
+                      index,
+                      e.target.value
+                    )
+                  }
+                  style={{
+                    width: "100%",
+                    height: 29,
+                    boxSizing: "border-box",
+                    borderRadius: 6,
+                    border: `1px solid ${COLORS.border}`,
+                    background: "#0b1221",
+                    color: COLORS.text,
+                    textAlign: "center",
+                    fontSize: 10,
+                    outline: "none",
+                    padding: 0,
+                  }}
+                />
+              </div>
+
+              {/* PENCAPAIAN */}
+              <div
+                style={{
+                  textAlign: "center",
+                  fontSize: 10,
+                  fontWeight: 700,
+                }}
+              >
+                {fmt(item.achieved)}
+              </div>
+
+              {/* % PENCAPAIAN */}
+              <div
+                style={{
                   textAlign: "center",
                   color: statusColor(
                     achievement
@@ -564,7 +692,11 @@ function PeriodRows({
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: GRID,
+
+            /* TOTAL HARUS SAMA PERSIS DENGAN BARIS */
+            gridTemplateColumns:
+              "80px 55px 55px 60px 60px",
+
             gap: 6,
             alignItems: "center",
             borderTop: `1px dotted ${COLORS.border}`,
@@ -572,15 +704,21 @@ function PeriodRows({
             fontWeight: 800,
           }}
         >
+          {/* TOTAL LABEL */}
           <div
             style={{
+              width: "80px",
+              minWidth: "80px",
+              maxWidth: "80px",
               fontSize: 10,
               color: COLORS.text,
+              textAlign: "left",
             }}
           >
             TOTAL
           </div>
 
+          {/* TOTAL TARGET */}
           <div
             style={{
               textAlign: "center",
@@ -590,6 +728,7 @@ function PeriodRows({
             {fmt(totalTarget)}
           </div>
 
+          {/* TOTAL PENCAPAIAN */}
           <div
             style={{
               textAlign: "center",
@@ -599,6 +738,7 @@ function PeriodRows({
             {fmt(totalAchieved)}
           </div>
 
+          {/* TOTAL % */}
           <div
             style={{
               textAlign: "center",
@@ -609,6 +749,7 @@ function PeriodRows({
             {totalPct.toFixed(3)}%
           </div>
 
+          {/* TOTAL KONTRIBUSI */}
           <div
             style={{
               textAlign: "center",
