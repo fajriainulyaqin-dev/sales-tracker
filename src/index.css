@@ -504,3 +504,63 @@ nav {
     max-width: 100% !important;
   }
 }
+/* =========================================================
+   FINAL FIX — APC DETAIL MOBILE
+   KPI ATAS BOLEH ELLIPSIS, DETAIL HARUS UTUH
+========================================================= */
+
+@media (max-width: 600px) {
+
+  /* APC detail card */
+  main section:first-of-type
+    [style*="grid-template-columns"] {
+
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+
+    grid-template-columns:
+      minmax(70px, 1.5fr)
+      minmax(58px, 0.75fr)
+      minmax(68px, 0.85fr)
+      minmax(68px, 0.85fr) !important;
+
+    gap: 4px !important;
+  }
+
+  /* Semua kolom APC */
+  main section:first-of-type
+    [style*="grid-template-columns"] > div {
+
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  /* Label APC */
+  main section:first-of-type
+    [style*="grid-template-columns"]
+    > div:first-child {
+
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  /* Angka APC */
+  main section:first-of-type
+    [style*="grid-template-columns"]
+    > div:not(:first-child) {
+
+    text-align: center !important;
+    white-space: nowrap !important;
+  }
+
+  /* Input target APC */
+  main section:first-of-type input[type="number"] {
+
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+}
