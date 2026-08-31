@@ -562,5 +562,32 @@ nav {
     width: 100% !important;
     max-width: 100% !important;
     min-width: 0 !important;
+  }/* ===== RAPihin kolom KPI detail ===== */
+@media (max-width: 600px) {
+  .metric-table,
+  .kpi-table {
+    width: 100%;
+    overflow-x: hidden;
   }
+
+  .metric-table > *,
+  .kpi-table > * {
+    min-width: 0;
+  }
+
+  .metric-table [class*="contribution"],
+  .kpi-table [class*="contribution"] {
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .metric-table [class*="target"],
+  .metric-table [class*="achievement"],
+  .metric-table [class*="percentage"],
+  .kpi-table [class*="target"],
+  .kpi-table [class*="achievement"],
+  .kpi-table [class*="percentage"] {
+    white-space: nowrap;
+  }
+}
 }
