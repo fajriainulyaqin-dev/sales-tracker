@@ -1,12 +1,20 @@
+/* =========================================================
+   SALES TRACKER — MOBILE UI
+   CSS FINAL / MOCKUP LOCKED
+========================================================= */
+
 * {
   box-sizing: border-box;
 }
 
 :root {
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system,
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system,
     BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: #f8fafc;
-  background: #080d18;
+
+  color: #f4f7fb;
+  background: #080d19;
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
@@ -15,12 +23,14 @@ html,
 body,
 #root {
   margin: 0;
+  width: 100%;
   min-height: 100%;
   min-height: 100dvh;
 }
 
 body {
-  background: #080d18;
+  background: #080d19;
+  overflow-x: hidden;
 }
 
 button,
@@ -32,17 +42,40 @@ button {
   cursor: pointer;
 }
 
+input {
+  min-width: 0;
+}
+
+/* =========================================================
+   APP
+========================================================= */
+
 .app-shell {
   width: 100%;
   max-width: 720px;
   min-height: 100dvh;
   margin: 0 auto;
-  background: #0f172a;
+  background: #0b1120;
 }
 
-/* =========================
+/* =========================================================
+   GENERAL
+========================================================= */
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+.muted {
+  color: #8491a8;
+}
+
+/* =========================================================
    HEADER
-========================= */
+========================================================= */
 
 .topbar {
   position: sticky;
@@ -54,439 +87,395 @@ button {
   justify-content: space-between;
 
   padding: 18px;
-  background: rgba(15, 23, 42, 0.94);
+
+  background: rgba(11, 17, 32, 0.96);
   backdrop-filter: blur(14px);
 
-  border-bottom: 1px solid #1e293b;
+  border-bottom: 1px solid #26334b;
 }
 
 .eyebrow {
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.16em;
-  color: #64748b;
-}
-
-h1,
-h2,
-p {
-  margin: 0;
-}
-
-h1 {
-  margin-top: 3px;
-  font-size: 25px;
-  line-height: 1.15;
+  color: #8491a8;
 }
 
 .icon-btn {
-  width: 42px;
-  height: 42px;
+  width: 44px !important;
+  height: 44px !important;
 
-  border: 1px solid #334155;
-  border-radius: 12px;
+  border: 1px solid #26334b !important;
+  border-radius: 13px !important;
 
-  color: #f8fafc;
-  background: #1e293b;
+  background: #142038 !important;
+  color: #f4f7fb !important;
 
-  font-size: 19px;
+  font-size: 20px !important;
 }
 
-/* =========================
-   CONTENT
-========================= */
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
 
-.content {
-  padding: 18px;
+main {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 18px 14px 100px !important;
 }
 
-/* =========================
-   HERO
-========================= */
+/* =========================================================
+   HEADER AREA OVERRIDE
+========================================================= */
 
-.hero-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-
-  padding: 20px;
-
-  border: 1px solid #334155;
-  border-radius: 20px;
-
-  background: #172033;
+main + * {
+  max-width: 720px;
 }
 
-.hero-card h2 {
-  margin-top: 5px;
-  font-size: 20px;
-}
+/* =========================================================
+   HERO CARD
+========================================================= */
 
-.muted {
-  color: #94a3b8;
-  font-size: 13px;
-}
-
-.hero-total {
-  text-align: right;
-}
-
-.hero-total span {
-  display: block;
-  color: #94a3b8;
-  font-size: 11px;
-}
-
-.hero-total strong {
-  display: block;
-  margin-top: 2px;
-  font-size: 28px;
-  line-height: 1;
-}
-
-/* =========================
-   SECTIONS
-========================= */
-
-.section {
-  margin-top: 26px;
-}
-
-.section-title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-
-  margin-bottom: 12px;
-}
-
-.section-title h2 {
-  font-size: 17px;
-  line-height: 1.2;
-}
-
-.section-title span {
-  color: #64748b;
-  font-size: 11px;
-  text-align: right;
-}
-
-/* =========================
-   METRIC CARDS
-========================= */
-
-.metric-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-}
-
-.metric-card {
-  padding: 16px;
-
-  border: 1px solid #263449;
-  border-radius: 16px;
-
-  background: #111827;
-}
-
-.metric-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  margin-bottom: 11px;
-
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.metric-head strong {
-  color: #e2e8f0;
-  font-size: 13px;
-}
-
-/* =========================
-   PROGRESS
-========================= */
-
-.progress-track {
-  height: 8px;
-
+main > div:first-child {
+  width: 100%;
+  min-width: 0;
   overflow: hidden;
 
-  border-radius: 999px;
-
-  background: #273449;
+  border-radius: 18px !important;
 }
 
-.progress-fill {
-  height: 100%;
-
-  border-radius: inherit;
-
-  background: #e2e8f0;
-
-  transition: width 0.25s ease;
+main > div:first-child > div:first-child {
+  min-width: 0 !important;
 }
 
-.metric-numbers {
-  display: flex;
-  align-items: baseline;
-  gap: 5px;
-
-  margin-top: 10px;
+main > div:first-child > div:first-child > div {
+  min-width: 0;
 }
 
-.metric-numbers strong {
-  font-size: 23px;
-  line-height: 1;
+main > div:first-child > div:first-child > div:nth-child(1),
+main > div:first-child > div:first-child > div:nth-child(2),
+main > div:first-child > div:first-child > div:nth-child(3) {
+  min-width: 0;
 }
 
-.metric-numbers span {
-  color: #64748b;
-  font-size: 13px;
+/* Hero angka */
+
+main > div:first-child strong {
+  max-width: 100%;
 }
 
-/* =========================
-   INPUT
-========================= */
+/* =========================================================
+   KPI FOUR CARDS
+========================================================= */
 
-.input-list {
-  display: grid;
-  gap: 10px;
-}
+/*
+  Anak kedua dari main = baris 4 KPI.
+  Dibuat tetap 4 kolom seperti mockup.
+*/
 
-.input-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
+main > div:nth-child(2) {
+  width: 100% !important;
 
-  padding: 11px 13px;
+  display: grid !important;
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr)) !important;
 
-  border: 1px solid #263449;
-  border-radius: 14px;
+  gap: 7px !important;
 
-  background: #111827;
-}
+  margin-top: 12px !important;
 
-.input-row span {
-  color: #cbd5e1;
-  font-size: 14px;
-  font-weight: 650;
-}
-
-.input-row input {
-  width: 110px;
-
-  padding: 9px 11px;
-
-  border: 1px solid #475569;
-  border-radius: 10px;
-
-  outline: none;
-
-  color: #f8fafc;
-  background: #0b1120;
-
-  text-align: right;
-}
-
-.input-row input:focus {
-  border-color: #94a3b8;
-}
-
-/* =========================
-   PENAWARAN
-========================= */
-
-.offer-grid {
-  display: grid;
-  gap: 12px;
-}
-
-.offer-card {
-  padding: 0;
   overflow: hidden;
 }
 
-.offer-card .metric-head {
-  margin: 0;
-  padding: 15px 16px;
+/* Card KPI */
 
-  border-bottom: 1px solid #263449;
+main > div:nth-child(2) > div {
+  min-width: 0 !important;
+  width: 100% !important;
 
-  background: #151f31;
+  padding: 9px 7px !important;
+
+  border-radius: 13px !important;
+
+  overflow: hidden;
 }
 
-.offer-card .input-list {
-  padding: 10px;
+/* Baris atas KPI */
+
+main > div:nth-child(2) > div > div:first-child {
+  min-width: 0 !important;
+
+  gap: 5px !important;
+  margin-bottom: 9px !important;
 }
 
-.offer-item {
-  padding: 13px;
+/* Icon KPI */
 
-  border: 1px solid #263449;
-  border-radius: 13px;
+main > div:nth-child(2) > div > div:first-child > div:first-child {
+  width: 27px !important;
+  height: 27px !important;
 
-  background: #0f172a;
+  min-width: 27px !important;
+
+  border-radius: 9px !important;
 }
 
-.offer-item + .offer-item {
-  margin-top: 8px;
+/* Judul KPI */
+
+main > div:nth-child(2) > div > div:first-child > div:last-child {
+  min-width: 0 !important;
+  overflow: hidden;
 }
 
-.offer-item .section-title {
-  margin-bottom: 9px;
+main > div:nth-child(2) > div > div:first-child > div:last-child > div:first-child {
+  max-width: 100%;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  font-size: 9px !important;
+  line-height: 1.15 !important;
 }
 
-.offer-item .section-title span {
-  color: #cbd5e1;
-  font-size: 13px;
-  font-weight: 650;
+/* Bobot */
+
+main > div:nth-child(2) > div > div:first-child > div:last-child > div:last-child {
+  font-size: 9px !important;
 }
 
-.offer-item .section-title strong {
-  color: #e2e8f0;
-  font-size: 12px;
+/* Angka KPI */
+
+main > div:nth-child(2) > div > div:nth-child(2) {
+  display: grid !important;
+
+  grid-template-columns: 1fr !important;
+
+  gap: 6px !important;
 }
 
-/* =========================
-   EDIT DETAILS
-========================= */
+/* Label Pencapaian / Kontribusi */
 
-.edit-details {
-  margin-top: 12px;
+main > div:nth-child(2) > div > div:nth-child(2) > div {
+  min-width: 0;
 }
 
-.edit-details summary {
-  display: inline-flex;
-  align-items: center;
+main > div:nth-child(2) > div > div:nth-child(2) > div > div:first-child {
+  font-size: 8px !important;
+  color: #8491a8 !important;
 
-  padding: 7px 10px;
-
-  border: 1px solid #334155;
-  border-radius: 9px;
-
-  color: #cbd5e1;
-  background: #172033;
-
-  font-size: 11px;
-  font-weight: 700;
-
-  cursor: pointer;
-  user-select: none;
+  white-space: nowrap;
 }
 
-.edit-details[open] summary {
-  margin-bottom: 9px;
+main > div:nth-child(2) > div > div:nth-child(2) > div > div:last-child {
+  font-size: 12px !important;
+  line-height: 1.1 !important;
+
+  white-space: nowrap;
 }
 
-.edit-box {
-  display: grid;
-  gap: 8px;
+/* =========================================================
+   INFO LINE
+========================================================= */
 
-  padding-top: 2px;
+main > div:nth-child(3) {
+  width: 100% !important;
+
+  margin-top: 10px !important;
+
+  color: #8491a8;
+  font-size: 9px !important;
+
+  overflow: hidden;
 }
 
-.edit-box .input-row {
-  padding: 9px 11px;
+/* =========================================================
+   SECTION CARD
+========================================================= */
+
+main section {
+  width: 100%;
+
+  min-width: 0;
+
+  margin-top: 14px !important;
+
+  padding: 14px !important;
+
+  border-radius: 15px !important;
+
+  overflow: hidden;
 }
 
-.edit-box .input-row span {
-  font-size: 12px;
+/* Header section */
+
+main section > div:first-child {
+  min-width: 0;
+
+  margin-bottom: 12px !important;
 }
 
-.edit-box .input-row input {
-  width: 90px;
-  padding: 7px 9px;
-  font-size: 13px;
+/* Judul section */
+
+main section > div:first-child > div:first-child {
+  min-width: 0;
+  overflow: hidden;
 }
 
-/* =========================
-   LOCAL STATUS
-========================= */
+main section > div:first-child > div:first-child > div:last-child {
+  min-width: 0;
+  overflow: hidden;
+}
+
+main section > div:first-child > div:first-child > div:last-child > div:first-child {
+  font-size: 13px !important;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Badge */
+
+main section > div:first-child > div:first-child > div:last-child > div:nth-child(2) {
+  max-width: 100%;
+
+  font-size: 8px !important;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Icon section */
+
+main section > div:first-child > div:first-child > div:first-child {
+  width: 34px !important;
+  height: 34px !important;
+
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   TABLE / PERIOD ROWS
+========================================================= */
+
+/*
+  Tabel memang punya min-width 455px di App.jsx.
+  Kita pertahankan, tapi biarkan scroll secara horizontal
+  di dalam section, bukan merusak seluruh halaman.
+*/
+
+main section > div:not(:first-child) {
+  max-width: 100%;
+}
+
+main section [style*="overflowX"] {
+  width: 100% !important;
+
+  max-width: 100% !important;
+
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+
+  -webkit-overflow-scrolling: touch;
+
+  scrollbar-width: thin;
+}
+
+/* Jangan sampai tabel mendorong body */
+
+main section [style*="overflowX"] > div {
+  min-width: 455px;
+}
+
+/* =========================================================
+   INPUT TARGET
+========================================================= */
+
+main section input[type="number"] {
+  min-width: 0 !important;
+
+  height: 29px !important;
+
+  padding: 5px 6px !important;
+
+  border-radius: 7px !important;
+
+  font-size: 10px !important;
+}
+
+/* =========================================================
+   NOTE
+========================================================= */
 
 .local-note {
+  width: 100%;
+
   display: flex;
   align-items: flex-start;
-  gap: 12px;
 
-  margin-top: 26px;
-  padding: 14px;
+  gap: 10px;
 
-  border: 1px dashed #475569;
-  border-radius: 14px;
+  margin-top: 18px;
 
-  color: #cbd5e1;
-  background: rgba(15, 23, 42, 0.5);
-}
+  padding: 12px;
 
-.local-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border: 1px dashed #334155;
+  border-radius: 13px;
 
-  flex: 0 0 auto;
-
-  width: 27px;
-  height: 27px;
-
-  border: 1px solid #475569;
-  border-radius: 50%;
-
-  color: #e2e8f0;
-  font-size: 13px;
-  font-weight: 800;
+  background: rgba(15, 23, 42, 0.55);
 }
 
 .local-note strong {
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .local-note p {
-  margin-top: 4px;
+  margin-top: 3px;
 
-  color: #94a3b8;
+  color: #8491a8;
 
-  font-size: 11px;
-  line-height: 1.5;
+  font-size: 10px;
+  line-height: 1.45;
 }
 
-/* =========================
+/* =========================================================
    MODAL
-========================= */
+========================================================= */
 
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 50;
 
-  display: grid;
-  place-items: end center;
+  z-index: 100;
 
-  padding: 12px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
 
-  background: rgba(0, 0, 0, 0.65);
+  padding: 10px;
+
+  background: rgba(0, 0, 0, 0.68);
 }
 
 .modal {
   width: min(100%, 720px);
+
   max-height: 90dvh;
 
   overflow-y: auto;
 
-  padding: 20px;
+  padding: 18px;
 
-  border: 1px solid #334155;
+  border: 1px solid #26334b;
   border-radius: 20px;
 
-  background: #111827;
+  background: #101829;
 
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.45);
 }
 
 .modal-head {
@@ -494,102 +483,240 @@ h1 {
   align-items: center;
   justify-content: space-between;
 
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .modal-head h2 {
-  margin-top: 3px;
-  font-size: 21px;
+  font-size: 20px;
 }
 
-/* =========================
+/* =========================================================
    SETTINGS
-========================= */
+========================================================= */
 
 .settings-section {
-  padding: 16px 0;
+  padding: 15px 0;
 
-  border-top: 1px solid #263449;
+  border-top: 1px solid #26334b;
 }
 
 .settings-title {
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 
-  color: #f8fafc;
+  color: #f4f7fb;
 
   font-size: 14px;
   font-weight: 750;
 }
 
-.settings-section .input-list {
-  gap: 9px;
-}
-
-.settings-section .input-row {
-  margin-bottom: 9px;
-}
-
-.settings-section .input-row:last-child {
-  margin-bottom: 0;
-}
-
 .settings-section p {
-  color: #94a3b8;
-  font-size: 12px;
+  color: #8491a8;
+
+  font-size: 11px;
   line-height: 1.5;
 }
 
-.danger-section {
-  margin-top: 4px;
+.settings-section .input-row {
+  margin-bottom: 8px;
+
+  padding: 9px 11px;
 }
+
+.settings-section .input-row span {
+  font-size: 12px;
+}
+
+.settings-section .input-row input {
+  width: 105px;
+}
+
+/* =========================================================
+   DANGER
+========================================================= */
 
 .danger-btn {
   width: 100%;
 
-  margin-top: 16px;
-  padding: 12px 16px;
+  margin-top: 14px;
+
+  padding: 11px 14px;
 
   border: 1px solid #7f1d1d;
-  border-radius: 12px;
+  border-radius: 11px;
 
   color: #fecaca;
+
   background: #450a0a;
 
+  font-size: 12px;
   font-weight: 700;
 }
 
-.danger-btn:active {
-  transform: translateY(1px);
+/* =========================================================
+   BOTTOM NAV
+========================================================= */
+
+nav {
+  position: fixed !important;
+
+  left: 50%;
+  bottom: 0;
+
+  transform: translateX(-50%);
+
+  z-index: 90;
+
+  width: 100%;
+  max-width: 720px;
+
+  background: rgba(8, 13, 25, 0.97) !important;
+
+  border-top: 1px solid #26334b !important;
+
+  backdrop-filter: blur(16px);
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
+/* =========================================================
+   MOBILE — STANDARD
+========================================================= */
 
-@media (min-width: 560px) {
-  .metric-grid {
-    grid-template-columns: repeat(3, 1fr);
+@media (max-width: 559px) {
+
+  main {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
   }
 
-  .modal-backdrop {
-    place-items: center;
+  /* Hero lebih lega */
+
+  main > div:first-child {
+    padding: 15px !important;
+  }
+
+  /* Hero grid */
+
+  main > div:first-child > div:first-child {
+    grid-template-columns:
+      minmax(0, 1.15fr)
+      minmax(0, 1fr)
+      minmax(70px, 0.85fr) !important;
+
+    gap: 8px !important;
+  }
+
+  /* Hero angka */
+
+  main > div:first-child > div:first-child > div:first-child > div:nth-child(2) {
+    font-size: 27px !important;
+  }
+
+  /* Total bobot */
+
+  main > div:first-child > div:first-child > div:nth-child(2) {
+    padding-left: 10px !important;
+  }
+
+  /* Donut */
+
+  main > div:first-child > div:first-child > div:nth-child(3) > div:first-child {
+    width: 72px !important;
+    height: 72px !important;
+  }
+
+  main > div:first-child > div:first-child > div:nth-child(3) > div:first-child > div {
+    width: 55px !important;
+    height: 55px !important;
+
+    font-size: 10px !important;
+  }
+
+  /* KPI */
+
+  main > div:nth-child(2) {
+    gap: 6px !important;
+  }
+
+  main > div:nth-child(2) > div {
+    padding: 8px 6px !important;
+  }
+
+  /* Section */
+
+  main section {
+    padding: 13px !important;
   }
 }
+
+/* =========================================================
+   MOBILE — VERY SMALL
+========================================================= */
 
 @media (max-width: 380px) {
-  .content {
-    padding: 14px;
+
+  main {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
   }
 
-  .hero-card {
-    padding: 16px;
+  main > div:first-child {
+    padding: 13px !important;
   }
 
-  .hero-total strong {
-    font-size: 24px;
+  main > div:first-child > div:first-child {
+    grid-template-columns:
+      minmax(0, 1.15fr)
+      minmax(0, 0.95fr)
+      68px !important;
+
+    gap: 6px !important;
   }
 
-  .input-row input {
-    width: 95px;
+  main > div:first-child > div:first-child > div:first-child > div:nth-child(2) {
+    font-size: 24px !important;
+  }
+
+  main > div:nth-child(2) {
+    gap: 4px !important;
+  }
+
+  main > div:nth-child(2) > div {
+    padding: 7px 5px !important;
+  }
+
+  main > div:nth-child(2) > div > div:first-child {
+    gap: 3px !important;
+  }
+
+  main > div:nth-child(2) > div > div:first-child > div:first-child {
+    width: 24px !important;
+    height: 24px !important;
+  }
+
+  main > div:nth-child(2) > div > div:first-child > div:last-child > div:first-child {
+    font-size: 8px !important;
+  }
+
+  main > div:nth-child(2) > div > div:nth-child(2) > div > div:last-child {
+    font-size: 11px !important;
+  }
+}
+
+/* =========================================================
+   TABLET / DESKTOP
+========================================================= */
+
+@media (min-width: 720px) {
+
+  main {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+
+  main > div:nth-child(2) {
+    gap: 9px !important;
+  }
+
+  main > div:nth-child(2) > div {
+    padding: 12px !important;
   }
 }
