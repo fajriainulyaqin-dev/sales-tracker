@@ -22,23 +22,27 @@ const defaultState = {
     startDate: "",
     endDate: "",
   },
+
   target: {
     apc: 0,
     pwp: 0,
     psm: 0,
     sg: 0,
   },
+
   achieved: {
     apc: 0,
     pwp: 0,
     psm: 0,
     sg: 0,
   },
+
   penawaran: {
     apc: {
       target: 48700,
       achieved: 55062,
     },
+
     pwp: [
       {
         label: "PWP 1 (Tgl 1 - 15)",
@@ -51,6 +55,7 @@ const defaultState = {
         achieved: 205,
       },
     ],
+
     psm: [
       {
         label: "PSM 1 (Tgl 1 - 7)",
@@ -73,6 +78,7 @@ const defaultState = {
         achieved: 296,
       },
     ],
+
     sg: [
       {
         label: "Serba Gratis 1 (Tgl 1 - 15)",
@@ -88,25 +94,20 @@ const defaultState = {
   },
 };
 
-function pct(value, target) {
-  if (!target || target <= 0) return 0;
-
-  return Math.min(
-    100,
-    Math.round((Number(value || 0) / Number(target)) * 1000) / 10
-  );
-}
-
 function pctRaw(value, target) {
   if (!target || target <= 0) return 0;
 
   return (
-    Math.round((Number(value || 0) / Number(target)) * 1000) / 10
+    Math.round(
+      (Number(value || 0) / Number(target)) * 1000
+    ) / 10
   );
 }
 
 function fmt(value) {
-  return new Intl.NumberFormat("id-ID").format(Number(value || 0));
+  return new Intl.NumberFormat("id-ID").format(
+    Number(value || 0)
+  );
 }
 
 function statusColor(value) {
@@ -132,6 +133,10 @@ function Icon({ children, color = COLORS.text }) {
   );
 }
 
+/* =========================================================
+   KPI ATAS
+========================================================= */
+
 function MiniKpi({
   icon,
   title,
@@ -146,7 +151,7 @@ function MiniKpi({
         background: "rgba(13,20,35,.95)",
         border: `1px solid ${color}35`,
         borderRadius: 12,
-        padding: 12,
+        padding: 10,
         minWidth: 0,
       }}
     >
@@ -154,29 +159,35 @@ function MiniKpi({
         style={{
           display: "flex",
           alignItems: "center",
-          gap: 8,
-          marginBottom: 12,
+          gap: 7,
+          marginBottom: 10,
         }}
       >
         <div
           style={{
-            width: 30,
-            height: 30,
-            borderRadius: 9,
+            width: 28,
+            height: 28,
+            borderRadius: 8,
             background: `${color}20`,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            flexShrink: 0,
           }}
         >
           <Icon color={color}>{icon}</Icon>
         </div>
 
-        <div style={{ minWidth: 0 }}>
+        <div
+          style={{
+            minWidth: 0,
+            overflow: "hidden",
+          }}
+        >
           <div
             style={{
-              fontSize: 11,
-              fontWeight: 700,
+              fontSize: 10,
+              fontWeight: 800,
               whiteSpace: "nowrap",
               overflow: "hidden",
               textOverflow: "ellipsis",
@@ -187,10 +198,10 @@ function MiniKpi({
 
           <div
             style={{
-              fontSize: 9,
+              fontSize: 8,
               color,
               marginTop: 2,
-              fontWeight: 700,
+              fontWeight: 800,
             }}
           >
             ({weight}%)
@@ -202,18 +213,23 @@ function MiniKpi({
         style={{
           display: "grid",
           gridTemplateColumns: "1fr 1fr",
-          gap: 8,
+          gap: 6,
         }}
       >
         <div>
-          <div style={{ color: COLORS.muted, fontSize: 9 }}>
+          <div
+            style={{
+              color: COLORS.muted,
+              fontSize: 8,
+            }}
+          >
             Pencapaian
           </div>
 
           <div
             style={{
               color: statusColor(achievement),
-              fontSize: 14,
+              fontSize: 12,
               fontWeight: 800,
               marginTop: 3,
             }}
@@ -223,14 +239,19 @@ function MiniKpi({
         </div>
 
         <div>
-          <div style={{ color: COLORS.muted, fontSize: 9 }}>
+          <div
+            style={{
+              color: COLORS.muted,
+              fontSize: 8,
+            }}
+          >
             Kontribusi
           </div>
 
           <div
             style={{
               color,
-              fontSize: 14,
+              fontSize: 12,
               fontWeight: 800,
               marginTop: 3,
             }}
@@ -242,6 +263,10 @@ function MiniKpi({
     </div>
   );
 }
+
+/* =========================================================
+   SECTION
+========================================================= */
 
 function Section({
   number,
@@ -268,63 +293,52 @@ function Section({
         style={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
-          gap: 10,
-          marginBottom: 14,
+          gap: 9,
+          marginBottom: 15,
         }}
       >
         <div
           style={{
+            width: 34,
+            height: 34,
+            borderRadius: 10,
+            background: `${color}18`,
+            border: `1px solid ${color}35`,
             display: "flex",
             alignItems: "center",
-            gap: 9,
-            minWidth: 0,
+            justifyContent: "center",
+            flexShrink: 0,
           }}
         >
+          <Icon color={color}>{icon}</Icon>
+        </div>
+
+        <div>
           <div
             style={{
-              width: 34,
-              height: 34,
-              borderRadius: 10,
-              background: `${color}18`,
-              border: `1px solid ${color}35`,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexShrink: 0,
+              fontSize: 14,
+              fontWeight: 800,
             }}
           >
-            <Icon color={color}>{icon}</Icon>
+            {number}. {title} ({weight}%)
           </div>
 
-          <div style={{ minWidth: 0 }}>
+          {badge && (
             <div
               style={{
-                fontSize: 14,
+                display: "inline-block",
+                marginTop: 5,
+                padding: "3px 8px",
+                borderRadius: 999,
+                background: `${color}20`,
+                color,
+                fontSize: 9,
                 fontWeight: 800,
-                color: COLORS.text,
               }}
             >
-              {number}. {title} ({weight}%)
+              {badge}
             </div>
-
-            {badge && (
-              <div
-                style={{
-                  display: "inline-block",
-                  marginTop: 5,
-                  padding: "3px 8px",
-                  borderRadius: 999,
-                  background: `${color}20`,
-                  color,
-                  fontSize: 9,
-                  fontWeight: 800,
-                }}
-              >
-                {badge}
-              </div>
-            )}
-          </div>
+          )}
         </div>
       </div>
 
@@ -339,7 +353,6 @@ function Section({
             display: "flex",
             alignItems: "center",
             gap: 5,
-            transform: "translateX(-8px)",
           }}
         >
           <span>ⓘ</span>
@@ -350,21 +363,30 @@ function Section({
   );
 }
 
+/* =========================================================
+   HEADER KOLOM
+   SATU SISTEM UNTUK PWP / PSM / SG
+========================================================= */
+
+const GRID =
+  "minmax(110px,1fr) 68px 68px 72px 76px";
+
 function ColumnHeader({ color }) {
   return (
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "minmax(100px,1fr) 68px 68px 68px 76px",
+        gridTemplateColumns: GRID,
         gap: 6,
+        alignItems: "center",
+        minWidth: 474,
+        padding: "0 4px 8px",
         color: COLORS.muted,
         fontSize: 8,
         fontWeight: 700,
-        padding: "0 4px 7px",
-        minWidth: 455,
       }}
     >
-      <div></div>
+      <div />
 
       <div style={{ textAlign: "center" }}>
         Target
@@ -378,7 +400,9 @@ function ColumnHeader({ color }) {
         <span style={{ fontSize: 7 }}>(Otomatis)</span>
       </div>
 
-      <div style={{ textAlign: "center" }}>% Pencapaian</div>
+      <div style={{ textAlign: "center" }}>
+        % Pencapaian
+      </div>
 
       <div
         style={{
@@ -392,42 +416,61 @@ function ColumnHeader({ color }) {
   );
 }
 
+/* =========================================================
+   BARIS PERIODE
+========================================================= */
+
 function PeriodRows({
   rows,
   color,
   weight,
   onTargetChange,
-  showInputs = true,
 }) {
   const totalTarget = rows.reduce(
-    (sum, item) => sum + Number(item.target || 0),
+    (sum, item) =>
+      sum + Number(item.target || 0),
     0
   );
 
   const totalAchieved = rows.reduce(
-    (sum, item) => sum + Number(item.achieved || 0),
+    (sum, item) =>
+      sum + Number(item.achieved || 0),
     0
   );
 
-  const totalPct = pctRaw(totalAchieved, totalTarget);
-  const totalContribution = (totalPct * weight) / 100;
+  const totalPct = pctRaw(
+    totalAchieved,
+    totalTarget
+  );
+
+  const totalContribution =
+    (totalPct * weight) / 100;
 
   return (
-    <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
+    <div
+      style={{
+        overflowX: "auto",
+        WebkitOverflowScrolling: "touch",
+      }}
+    >
       <ColumnHeader color={color} />
 
-      <div style={{ minWidth: 455 }}>
+      <div style={{ minWidth: 474 }}>
         {rows.map((item, index) => {
-          const achievement = pctRaw(item.achieved, item.target);
-          const contribution = (achievement * weight) / 100;
+          const achievement = pctRaw(
+            item.achieved,
+            item.target
+          );
+
+          const contribution =
+            (achievement * weight) / 100;
 
           return (
             <div
               key={index}
               style={{
                 display: "grid",
-                gridTemplateColumns:
-                  "minmax(100px,1fr) 68px 68px 68px 76px",
+                gridTemplateColumns: GRID,
                 gap: 6,
                 alignItems: "center",
                 minHeight: 43,
@@ -438,44 +481,46 @@ function PeriodRows({
                     : `1px dotted ${COLORS.border}`,
               }}
             >
+              {/* LABEL */}
               <div
                 style={{
                   fontSize: 10,
                   fontWeight: 650,
                   color: COLORS.text,
+                  minWidth: 0,
                 }}
               >
                 {item.label}
               </div>
 
+              {/* TARGET */}
               <div>
-                {showInputs ? (
-                  <input
-                    type="number"
-                    value={item.target}
-                    onChange={(e) =>
-                      onTargetChange(index, e.target.value)
-                    }
-                    style={{
-                      width: "100%",
-                      height: 29,
-                      boxSizing: "border-box",
-                      borderRadius: 6,
-                      border: `1px solid ${COLORS.border}`,
-                      background: "#0b1221",
-                      color: COLORS.text,
-                      textAlign: "center",
-                      fontSize: 11,
-                      outline: "none",
-                    }}
-                  />
-                ) : (
-                  <div style={{ textAlign: "center", fontSize: 10 }}>
-                    {fmt(item.target)}
-                  </div>
-                )}
+                <input
+                  type="number"
+                  value={item.target}
+                  onChange={(e) =>
+                    onTargetChange(
+                      index,
+                      e.target.value
+                    )
+                  }
+                  style={{
+                    width: "100%",
+                    height: 29,
+                    boxSizing: "border-box",
+                    borderRadius: 6,
+                    border: `1px solid ${COLORS.border}`,
+                    background: "#0b1221",
+                    color: COLORS.text,
+                    textAlign: "center",
+                    fontSize: 10,
+                    outline: "none",
+                    padding: 0,
+                  }}
+                />
               </div>
 
+              {/* PENCAPAIAN */}
               <div
                 style={{
                   textAlign: "center",
@@ -486,10 +531,13 @@ function PeriodRows({
                 {fmt(item.achieved)}
               </div>
 
+              {/* % PENCAPAIAN */}
               <div
                 style={{
                   textAlign: "center",
-                  color: statusColor(achievement),
+                  color: statusColor(
+                    achievement
+                  ),
                   fontSize: 10,
                   fontWeight: 800,
                 }}
@@ -497,13 +545,13 @@ function PeriodRows({
                 {achievement.toFixed(3)}%
               </div>
 
+              {/* KONTRIBUSI */}
               <div
                 style={{
                   textAlign: "center",
                   color,
                   fontSize: 10,
                   fontWeight: 800,
-                  transform: "translateX(-8px)",
                 }}
               >
                 {contribution.toFixed(2)}%
@@ -512,11 +560,11 @@ function PeriodRows({
           );
         })}
 
+        {/* TOTAL */}
         <div
           style={{
             display: "grid",
-            gridTemplateColumns:
-              "minmax(100px,1fr) 68px 68px 68px 76px",
+            gridTemplateColumns: GRID,
             gap: 6,
             alignItems: "center",
             borderTop: `1px dotted ${COLORS.border}`,
@@ -533,11 +581,21 @@ function PeriodRows({
             TOTAL
           </div>
 
-          <div style={{ textAlign: "center", fontSize: 10 }}>
+          <div
+            style={{
+              textAlign: "center",
+              fontSize: 10,
+            }}
+          >
             {fmt(totalTarget)}
           </div>
 
-          <div style={{ textAlign: "center", fontSize: 10 }}>
+          <div
+            style={{
+              textAlign: "center",
+              fontSize: 10,
+            }}
+          >
             {fmt(totalAchieved)}
           </div>
 
@@ -566,6 +624,10 @@ function PeriodRows({
   );
 }
 
+/* =========================================================
+   APP
+========================================================= */
+
 export default function App() {
   const [state, setState] = useState(() => {
     try {
@@ -576,43 +638,59 @@ export default function App() {
     }
   });
 
-  const [showSettings, setShowSettings] = useState(false);
-  const [activeTab, setActiveTab] = useState("dashboard");
+  const [showSettings, setShowSettings] =
+    useState(false);
+
+  const [activeTab, setActiveTab] =
+    useState("dashboard");
 
   const safeState = {
     ...defaultState,
     ...state,
+
     period: {
       ...defaultState.period,
       ...(state?.period || {}),
     },
+
     target: {
       ...defaultState.target,
       ...(state?.target || {}),
     },
+
     achieved: {
       ...defaultState.achieved,
       ...(state?.achieved || {}),
     },
+
     penawaran: {
       ...defaultState.penawaran,
       ...(state?.penawaran || {}),
     },
   };
 
-  const apcTarget = Number(safeState.penawaran.apc?.target || 0);
+  const apcTarget = Number(
+    safeState.penawaran.apc?.target || 0
+  );
+
   const apcAchieved = Number(
     safeState.penawaran.apc?.achieved || 0
   );
 
-  const pwpRows = safeState.penawaran.pwp || [];
-  const psmRows = safeState.penawaran.psm || [];
-  const sgRows = safeState.penawaran.sg || [];
+  const pwpRows =
+    safeState.penawaran.pwp || [];
+
+  const psmRows =
+    safeState.penawaran.psm || [];
+
+  const sgRows =
+    safeState.penawaran.sg || [];
 
   const pwpTarget = useMemo(
     () =>
       pwpRows.reduce(
-        (sum, item) => sum + Number(item.target || 0),
+        (sum, item) =>
+          sum + Number(item.target || 0),
         0
       ),
     [pwpRows]
@@ -621,7 +699,8 @@ export default function App() {
   const pwpAchieved = useMemo(
     () =>
       pwpRows.reduce(
-        (sum, item) => sum + Number(item.achieved || 0),
+        (sum, item) =>
+          sum + Number(item.achieved || 0),
         0
       ),
     [pwpRows]
@@ -630,7 +709,8 @@ export default function App() {
   const psmTarget = useMemo(
     () =>
       psmRows.reduce(
-        (sum, item) => sum + Number(item.target || 0),
+        (sum, item) =>
+          sum + Number(item.target || 0),
         0
       ),
     [psmRows]
@@ -639,7 +719,8 @@ export default function App() {
   const psmAchieved = useMemo(
     () =>
       psmRows.reduce(
-        (sum, item) => sum + Number(item.achieved || 0),
+        (sum, item) =>
+          sum + Number(item.achieved || 0),
         0
       ),
     [psmRows]
@@ -648,7 +729,8 @@ export default function App() {
   const sgTarget = useMemo(
     () =>
       sgRows.reduce(
-        (sum, item) => sum + Number(item.target || 0),
+        (sum, item) =>
+          sum + Number(item.target || 0),
         0
       ),
     [sgRows]
@@ -657,21 +739,48 @@ export default function App() {
   const sgAchieved = useMemo(
     () =>
       sgRows.reduce(
-        (sum, item) => sum + Number(item.achieved || 0),
+        (sum, item) =>
+          sum + Number(item.achieved || 0),
         0
       ),
     [sgRows]
   );
 
-  const apcPct = pctRaw(apcAchieved, apcTarget);
-  const pwpPct = pctRaw(pwpAchieved, pwpTarget);
-  const psmPct = pctRaw(psmAchieved, psmTarget);
-  const sgPct = pctRaw(sgAchieved, sgTarget);
+  /* =======================================================
+     RUMUS KONTRIBUSI
+  ======================================================= */
 
-  const apcContribution = (apcPct * 25) / 100;
-  const pwpContribution = (pwpPct * 25) / 100;
-  const psmContribution = (psmPct * 20) / 100;
-  const sgContribution = (sgPct * 30) / 100;
+  const apcPct = pctRaw(
+    apcAchieved,
+    apcTarget
+  );
+
+  const pwpPct = pctRaw(
+    pwpAchieved,
+    pwpTarget
+  );
+
+  const psmPct = pctRaw(
+    psmAchieved,
+    psmTarget
+  );
+
+  const sgPct = pctRaw(
+    sgAchieved,
+    sgTarget
+  );
+
+  const apcContribution =
+    (apcPct * 25) / 100;
+
+  const pwpContribution =
+    (pwpPct * 25) / 100;
+
+  const psmContribution =
+    (psmPct * 20) / 100;
+
+  const sgContribution =
+    (sgPct * 30) / 100;
 
   const totalContribution =
     apcContribution +
@@ -679,7 +788,14 @@ export default function App() {
     psmContribution +
     sgContribution;
 
-  const totalProgress = Math.min(100, totalContribution);
+  const totalProgress = Math.min(
+    100,
+    totalContribution
+  );
+
+  /* =======================================================
+     SAVE
+  ======================================================= */
 
   function persist(next) {
     setState(next);
@@ -687,13 +803,14 @@ export default function App() {
     try {
       saveState(next);
     } catch {
-      // local save gagal tidak boleh membuat UI crash
+      // Jangan crash kalau penyimpanan gagal.
     }
   }
 
   function updatePeriod(field, value) {
     persist({
       ...safeState,
+
       period: {
         ...safeState.period,
         [field]: value,
@@ -704,47 +821,74 @@ export default function App() {
   function updateApc(field, value) {
     persist({
       ...safeState,
+
       penawaran: {
         ...safeState.penawaran,
+
         apc: {
           ...safeState.penawaran.apc,
-          [field]: Math.max(0, Number(value) || 0),
+
+          [field]: Math.max(
+            0,
+            Number(value) || 0
+          ),
         },
       },
     });
   }
 
-  function updateRows(group, index, field, value) {
-    const updated = [...(safeState.penawaran[group] || [])];
+  function updateRows(
+    group,
+    index,
+    field,
+    value
+  ) {
+    const updated = [
+      ...(safeState.penawaran[group] || []),
+    ];
 
     updated[index] = {
       ...updated[index],
+
       [field]:
         field === "target"
-          ? Math.max(0, Number(value) || 0)
+          ? Math.max(
+              0,
+              Number(value) || 0
+            )
           : value,
     };
 
     persist({
       ...safeState,
+
       penawaran: {
         ...safeState.penawaran,
+
         [group]: updated,
       },
     });
   }
 
   function clearLocalData() {
-    const confirmed = window.confirm(
-      "Hapus semua data lokal Sales Tracker?"
-    );
+    const confirmed =
+      window.confirm(
+        "Hapus semua data lokal Sales Tracker?"
+      );
 
     if (!confirmed) return;
 
-    const next =
-      typeof resetState === "function"
-        ? resetState()
-        : defaultState;
+    let next = defaultState;
+
+    try {
+      if (
+        typeof resetState === "function"
+      ) {
+        next = resetState() || defaultState;
+      }
+    } catch {
+      next = defaultState;
+    }
 
     setState(next);
     setShowSettings(false);
@@ -756,6 +900,10 @@ export default function App() {
       : totalProgress >= 70
       ? COLORS.yellow
       : COLORS.red;
+
+  /* =======================================================
+     TAB SELAIN DASHBOARD
+  ======================================================= */
 
   if (activeTab !== "dashboard") {
     return (
@@ -779,7 +927,8 @@ export default function App() {
           <header
             style={{
               padding: "22px 18px 18px",
-              borderBottom: `1px solid ${COLORS.border}`,
+              borderBottom:
+                `1px solid ${COLORS.border}`,
             }}
           >
             <div
@@ -812,12 +961,18 @@ export default function App() {
             <div
               style={{
                 background: COLORS.panel,
-                border: `1px solid ${COLORS.border}`,
+                border:
+                  `1px solid ${COLORS.border}`,
                 borderRadius: 16,
                 padding: 20,
               }}
             >
-              <div style={{ fontSize: 14, fontWeight: 800 }}>
+              <div
+                style={{
+                  fontSize: 14,
+                  fontWeight: 800,
+                }}
+              >
                 {activeTab === "history"
                   ? "Riwayat Pencapaian"
                   : activeTab === "target"
@@ -833,9 +988,9 @@ export default function App() {
                   marginTop: 8,
                 }}
               >
-                Modul ini kita siapkan setelah dashboard utama
-                terkunci. Untuk sekarang fokus utama tetap
-                dashboard Penawaran Langsung sesuai mockup.
+                Modul ini kita siapkan
+                setelah dashboard utama
+                terkunci.
               </div>
             </div>
           </div>
@@ -848,6 +1003,10 @@ export default function App() {
       </div>
     );
   }
+
+  /* =======================================================
+     DASHBOARD
+  ======================================================= */
 
   return (
     <div
@@ -871,7 +1030,8 @@ export default function App() {
         <header
           style={{
             padding: "24px 18px 18px",
-            borderBottom: `1px solid ${COLORS.border}`,
+            borderBottom:
+              `1px solid ${COLORS.border}`,
           }}
         >
           <div
@@ -907,30 +1067,25 @@ export default function App() {
               </div>
             </div>
 
-            <div
+            <button
+              onClick={() =>
+                setShowSettings(true)
+              }
               style={{
-                display: "flex",
-                gap: 8,
-                alignItems: "center",
+                width: 44,
+                height: 44,
+                borderRadius: 12,
+                border:
+                  `1px solid ${COLORS.border}`,
+                background: COLORS.panel2,
+                color: COLORS.text,
+                fontSize: 21,
+                cursor: "pointer",
               }}
+              aria-label="Pengaturan"
             >
-              <button
-                onClick={() => setShowSettings(true)}
-                style={{
-                  width: 44,
-                  height: 44,
-                  borderRadius: 12,
-                  border: `1px solid ${COLORS.border}`,
-                  background: COLORS.panel2,
-                  color: COLORS.text,
-                  fontSize: 21,
-                  cursor: "pointer",
-                }}
-                aria-label="Pengaturan"
-              >
-                ⚙
-              </button>
-            </div>
+              ⚙
+            </button>
           </div>
 
           <div
@@ -941,7 +1096,8 @@ export default function App() {
               justifyContent: "space-between",
               gap: 10,
               background: "#0d1526",
-              border: `1px solid ${COLORS.border}`,
+              border:
+                `1px solid ${COLORS.border}`,
               borderRadius: 10,
               padding: "10px 12px",
             }}
@@ -963,21 +1119,29 @@ export default function App() {
                   marginTop: 3,
                 }}
               >
-                {safeState.period.name || "Periode Aktif"}
+                {safeState.period.name ||
+                  "Periode Aktif"}
               </div>
             </div>
 
-            <div style={{ fontSize: 18 }}>▾</div>
+            <div style={{ fontSize: 18 }}>
+              ▾
+            </div>
           </div>
         </header>
 
-        <main style={{ padding: "18px 14px" }}>
+        <main
+          style={{
+            padding: "18px 14px",
+          }}
+        >
           {/* HERO */}
           <div
             style={{
               background:
                 "linear-gradient(135deg,#141d31 0%,#111a2d 100%)",
-              border: `1px solid ${COLORS.border}`,
+              border:
+                `1px solid ${COLORS.border}`,
               borderRadius: 16,
               padding: 17,
             }}
@@ -985,7 +1149,8 @@ export default function App() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "1.15fr 1fr .9fr",
+                gridTemplateColumns:
+                  "1.15fr 1fr .9fr",
                 alignItems: "center",
                 gap: 12,
               }}
@@ -1026,7 +1191,8 @@ export default function App() {
 
               <div
                 style={{
-                  borderLeft: `1px solid ${COLORS.border}`,
+                  borderLeft:
+                    `1px solid ${COLORS.border}`,
                   paddingLeft: 14,
                 }}
               >
@@ -1083,7 +1249,8 @@ export default function App() {
                     width: 82,
                     height: 82,
                     borderRadius: "50%",
-                    background: `conic-gradient(${progressColor} ${totalProgress}%, #263149 0)`,
+                    background:
+                      `conic-gradient(${progressColor} ${totalProgress}%, #263149 0)`,
                     display: "grid",
                     placeItems: "center",
                   }}
@@ -1121,7 +1288,8 @@ export default function App() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(4,minmax(0,1fr))",
+              gridTemplateColumns:
+                "repeat(4,minmax(0,1fr))",
               gap: 7,
               marginTop: 12,
             }}
@@ -1173,7 +1341,10 @@ export default function App() {
             ⓘ Kontribusi = Pencapaian × Bobot
           </div>
 
-          {/* APC */}
+          {/* =================================================
+              APC
+          ================================================= */}
+
           <Section
             number="1"
             title="APC vs Target"
@@ -1182,14 +1353,22 @@ export default function App() {
             color={COLORS.blue}
             note="Bobot: 25% dari total Penawaran Langsung"
           >
-            <div style={{ overflowX: "auto" }}>
-              <div style={{ minWidth: 455 }}>
-                <ColumnHeader color={COLORS.blue} />
+            <div
+              style={{
+                overflowX: "auto",
+                WebkitOverflowScrolling:
+                  "touch",
+              }}
+            >
+              <ColumnHeader
+                color={COLORS.blue}
+              />
 
+              <div style={{ minWidth: 474 }}>
                 <div
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "minmax(95px,1fr) 72px 72px 72px 72px",
+                    gridTemplateColumns: GRID,
                     gap: 6,
                     alignItems: "center",
                     minHeight: 45,
@@ -1198,34 +1377,37 @@ export default function App() {
                 >
                   <div
                     style={{
-                      fontSize: 11,
+                      fontSize: 10,
                       fontWeight: 750,
                     }}
                   >
                     APC
                   </div>
 
-                  <div>
-                    <input
-                      type="number"
-                      value={apcTarget}
-                      onChange={(e) =>
-                        updateApc("target", e.target.value)
-                      }
-                      style={{
-                        width: "100%",
-                        height: 29,
-                        boxSizing: "border-box",
-                        borderRadius: 6,
-                        border: `1px solid ${COLORS.border}`,
-                        background: "#0b1221",
-                        color: COLORS.text,
-                        textAlign: "center",
-                        fontSize: 10,
-                        outline: "none",
-                      }}
-                    />
-                  </div>
+                  <input
+                    type="number"
+                    value={apcTarget}
+                    onChange={(e) =>
+                      updateApc(
+                        "target",
+                        e.target.value
+                      )
+                    }
+                    style={{
+                      width: "100%",
+                      height: 29,
+                      boxSizing: "border-box",
+                      borderRadius: 6,
+                      border:
+                        `1px solid ${COLORS.border}`,
+                      background: "#0b1221",
+                      color: COLORS.text,
+                      textAlign: "center",
+                      fontSize: 10,
+                      outline: "none",
+                      padding: 0,
+                    }}
+                  />
 
                   <div
                     style={{
@@ -1240,12 +1422,13 @@ export default function App() {
                   <div
                     style={{
                       textAlign: "center",
-                      color: statusColor(apcPct),
+                      color:
+                        statusColor(apcPct),
                       fontSize: 10,
                       fontWeight: 800,
                     }}
                   >
-                    {apcPct.toFixed(2)}%
+                    {apcPct.toFixed(3)}%
                   </div>
 
                   <div
@@ -1263,7 +1446,10 @@ export default function App() {
             </div>
           </Section>
 
-          {/* PWP */}
+          {/* =================================================
+              PWP
+          ================================================= */}
+
           <Section
             number="2"
             title="PWP Total"
@@ -1277,13 +1463,24 @@ export default function App() {
               rows={pwpRows}
               color={COLORS.purple}
               weight={25}
-              onTargetChange={(index, value) =>
-                updateRows("pwp", index, "target", value)
+              onTargetChange={(
+                index,
+                value
+              ) =>
+                updateRows(
+                  "pwp",
+                  index,
+                  "target",
+                  value
+                )
               }
             />
           </Section>
 
-          {/* PSM */}
+          {/* =================================================
+              PSM
+          ================================================= */}
+
           <Section
             number="3"
             title="PSM Total"
@@ -1297,13 +1494,24 @@ export default function App() {
               rows={psmRows}
               color={COLORS.orange}
               weight={20}
-              onTargetChange={(index, value) =>
-                updateRows("psm", index, "target", value)
+              onTargetChange={(
+                index,
+                value
+              ) =>
+                updateRows(
+                  "psm",
+                  index,
+                  "target",
+                  value
+                )
               }
             />
           </Section>
 
-          {/* SG */}
+          {/* =================================================
+              SG
+          ================================================= */}
+
           <Section
             number="4"
             title="Serba Gratis Total"
@@ -1317,8 +1525,16 @@ export default function App() {
               rows={sgRows}
               color={COLORS.yellow}
               weight={30}
-              onTargetChange={(index, value) =>
-                updateRows("sg", index, "target", value)
+              onTargetChange={(
+                index,
+                value
+              ) =>
+                updateRows(
+                  "sg",
+                  index,
+                  "target",
+                  value
+                )
               }
             />
           </Section>
@@ -1328,7 +1544,8 @@ export default function App() {
             style={{
               marginTop: 14,
               borderRadius: 13,
-              border: `1px solid ${COLORS.green}45`,
+              border:
+                `1px solid ${COLORS.green}45`,
               background: "#0e1a18",
               padding: 14,
               display: "flex",
@@ -1349,7 +1566,8 @@ export default function App() {
                   width: 34,
                   height: 34,
                   borderRadius: 10,
-                  background: `${COLORS.green}18`,
+                  background:
+                    `${COLORS.green}18`,
                   display: "grid",
                   placeItems: "center",
                   fontSize: 17,
@@ -1377,8 +1595,8 @@ export default function App() {
                     lineHeight: 1.4,
                   }}
                 >
-                  Data saat ini disimpan di perangkat/browser
-                  ini.
+                  Data saat ini disimpan di
+                  perangkat/browser ini.
                 </div>
               </div>
             </div>
@@ -1387,14 +1605,19 @@ export default function App() {
               onClick={() => {
                 try {
                   saveState(safeState);
-                  window.alert("Data berhasil disimpan.");
+                  window.alert(
+                    "Data berhasil disimpan."
+                  );
                 } catch {
-                  window.alert("Gagal menyimpan data.");
+                  window.alert(
+                    "Gagal menyimpan data."
+                  );
                 }
               }}
               style={{
                 background: "transparent",
-                border: `1px solid ${COLORS.green}80`,
+                border:
+                  `1px solid ${COLORS.green}80`,
                 color: COLORS.green,
                 borderRadius: 8,
                 padding: "8px 10px",
@@ -1413,7 +1636,9 @@ export default function App() {
       {/* SETTINGS */}
       {showSettings && (
         <div
-          onClick={() => setShowSettings(false)}
+          onClick={() =>
+            setShowSettings(false)
+          }
           style={{
             position: "fixed",
             inset: 0,
@@ -1425,13 +1650,17 @@ export default function App() {
           }}
         >
           <div
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) =>
+              e.stopPropagation()
+            }
             style={{
               width: "100%",
               maxWidth: 720,
               background: "#111a2b",
-              border: `1px solid ${COLORS.border}`,
-              borderRadius: "18px 18px 0 0",
+              border:
+                `1px solid ${COLORS.border}`,
+              borderRadius:
+                "18px 18px 0 0",
               padding: 18,
               boxSizing: "border-box",
             }}
@@ -1453,12 +1682,15 @@ export default function App() {
               </div>
 
               <button
-                onClick={() => setShowSettings(false)}
+                onClick={() =>
+                  setShowSettings(false)
+                }
                 style={{
                   width: 34,
                   height: 34,
                   borderRadius: 9,
-                  border: `1px solid ${COLORS.border}`,
+                  border:
+                    `1px solid ${COLORS.border}`,
                   background: COLORS.panel,
                   color: COLORS.text,
                   cursor: "pointer",
@@ -1488,16 +1720,22 @@ export default function App() {
 
                 <input
                   type="text"
-                  value={safeState.period.name}
+                  value={
+                    safeState.period.name
+                  }
                   onChange={(e) =>
-                    updatePeriod("name", e.target.value)
+                    updatePeriod(
+                      "name",
+                      e.target.value
+                    )
                   }
                   style={{
                     width: "100%",
                     boxSizing: "border-box",
                     height: 42,
                     borderRadius: 9,
-                    border: `1px solid ${COLORS.border}`,
+                    border:
+                      `1px solid ${COLORS.border}`,
                     background: "#0b1221",
                     color: COLORS.text,
                     padding: "0 12px",
@@ -1519,16 +1757,23 @@ export default function App() {
 
                 <input
                   type="date"
-                  value={safeState.period.startDate || ""}
+                  value={
+                    safeState.period.startDate ||
+                    ""
+                  }
                   onChange={(e) =>
-                    updatePeriod("startDate", e.target.value)
+                    updatePeriod(
+                      "startDate",
+                      e.target.value
+                    )
                   }
                   style={{
                     width: "100%",
                     boxSizing: "border-box",
                     height: 42,
                     borderRadius: 9,
-                    border: `1px solid ${COLORS.border}`,
+                    border:
+                      `1px solid ${COLORS.border}`,
                     background: "#0b1221",
                     color: COLORS.text,
                     padding: "0 12px",
@@ -1550,16 +1795,23 @@ export default function App() {
 
                 <input
                   type="date"
-                  value={safeState.period.endDate || ""}
+                  value={
+                    safeState.period.endDate ||
+                    ""
+                  }
                   onChange={(e) =>
-                    updatePeriod("endDate", e.target.value)
+                    updatePeriod(
+                      "endDate",
+                      e.target.value
+                    )
                   }
                   style={{
                     width: "100%",
                     boxSizing: "border-box",
                     height: 42,
                     borderRadius: 9,
-                    border: `1px solid ${COLORS.border}`,
+                    border:
+                      `1px solid ${COLORS.border}`,
                     background: "#0b1221",
                     color: COLORS.text,
                     padding: "0 12px",
@@ -1572,7 +1824,8 @@ export default function App() {
                 style={{
                   marginTop: 6,
                   paddingTop: 14,
-                  borderTop: `1px solid ${COLORS.border}`,
+                  borderTop:
+                    `1px solid ${COLORS.border}`,
                 }}
               >
                 <div
@@ -1593,19 +1846,23 @@ export default function App() {
                     marginTop: 5,
                   }}
                 >
-                  Semua data saat ini tersimpan di
-                  browser/perangkat ini.
+                  Semua data saat ini tersimpan
+                  di browser/perangkat ini.
                 </div>
 
                 <button
-                  onClick={clearLocalData}
+                  onClick={
+                    clearLocalData
+                  }
                   style={{
                     width: "100%",
                     marginTop: 12,
                     height: 42,
                     borderRadius: 9,
-                    border: `1px solid ${COLORS.red}80`,
-                    background: `${COLORS.red}10`,
+                    border:
+                      `1px solid ${COLORS.red}80`,
+                    background:
+                      `${COLORS.red}10`,
                     color: COLORS.red,
                     fontWeight: 800,
                     cursor: "pointer",
@@ -1627,7 +1884,14 @@ export default function App() {
   );
 }
 
-function BottomNav({ activeTab, setActiveTab }) {
+/* =========================================================
+   BOTTOM NAV
+========================================================= */
+
+function BottomNav({
+  activeTab,
+  setActiveTab,
+}) {
   const items = [
     ["dashboard", "⌂", "Dashboard"],
     ["history", "◷", "Riwayat"],
@@ -1652,52 +1916,67 @@ function BottomNav({ activeTab, setActiveTab }) {
         style={{
           width: "100%",
           maxWidth: 720,
-          background: "rgba(9,14,25,.96)",
+          background:
+            "rgba(9,14,25,.96)",
           backdropFilter: "blur(12px)",
-          borderTop: `1px solid ${COLORS.border}`,
+          borderTop:
+            `1px solid ${COLORS.border}`,
           display: "grid",
-          gridTemplateColumns: "repeat(4,1fr)",
+          gridTemplateColumns:
+            "repeat(4,1fr)",
           pointerEvents: "auto",
           paddingBottom:
             "max(7px, env(safe-area-inset-bottom))",
         }}
       >
-        {items.map(([key, icon, label]) => {
-          const active = activeTab === key;
+        {items.map(
+          ([key, icon, label]) => {
+            const active =
+              activeTab === key;
 
-          return (
-            <button
-              key={key}
-              onClick={() => setActiveTab(key)}
-              style={{
-                border: 0,
-                background: "transparent",
-                color: active ? COLORS.blue : COLORS.muted,
-                padding: "9px 4px 6px",
-                cursor: "pointer",
-              }}
-            >
-              <div
+            return (
+              <button
+                key={key}
+                onClick={() =>
+                  setActiveTab(key)
+                }
                 style={{
-                  fontSize: 18,
-                  lineHeight: 1,
+                  border: 0,
+                  background:
+                    "transparent",
+                  color: active
+                    ? COLORS.blue
+                    : COLORS.muted,
+                  padding:
+                    "9px 4px 6px",
+                  cursor: "pointer",
                 }}
               >
-                {icon}
-              </div>
+                <div
+                  style={{
+                    fontSize: 18,
+                    lineHeight: 1,
+                  }}
+                >
+                  {icon}
+                </div>
 
-              <div
-                style={{
-                  fontSize: 8,
-                  fontWeight: active ? 800 : 600,
-                  marginTop: 5,
-                }}
-              >
-                {label}
-              </div>
-            </button>
-          );
-        })}
+                <div
+                  style={{
+                    fontSize: 8,
+                    fontWeight:
+                      active
+                        ? 800
+                        : 600,
+                    marginTop: 5,
+                  }}
+                >
+                  {label}
+                </div>
+              </button>
+            );
+          }
+        )}
       </div>
     </nav>
   );
