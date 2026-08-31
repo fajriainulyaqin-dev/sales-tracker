@@ -52,12 +52,118 @@ function App() {
     saveState(next);
   }
 
+  function updatePenawaran(group, index, field, value) {
+    const next = {
+      ...state,
+      penawaran: {
+        ...state.penawaran,
+        [group]:
+          group === "apc"
+            ? {
+                ...state.penawaran.apc,
+                [field]: Math.max(0, Number(value) || 0)
+              }
+            : state.penawaran[group].map((item, i) =>
+                i === index
+                  ? {
+                      ...item,
+                      [field]: Math.max(0, Number(value) || 0)
+                    }
+                  : item
+              )
+      }
+    };
+
+    setState(next);
+    saveState(next);
+  }
+
   function clearLocalData() {
     if (!confirm("Hapus semua data lokal Sales Tracker?")) return;
 
     const next = resetState();
     setState(next);
     setShowSettings(false);
+  }
+
+  function PenawaranGroup({ title, group }) {
+    const items =
+      group === "apc"
+        ? [{ ...state.penawaran.apc, label: "APC" }]
+        : state.penawaran[group];
+
+    return (
+      <div className="metric-card">
+        <div className="metric-head">
+          <span>{title}</span>
+        </div>
+
+        <div className="input-list">
+          {items.map((item, index) => {
+            const progress = pct(item.achieved, item.target);
+
+            return (
+              <div key={item.label}>
+                <div className="section-title">
+                  <span>{item.label}</span>
+                  <strong>{progress}%</strong>
+                </div>
+
+                <div className="progress-track">
+                  <div
+                    className="progress-fill"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+
+                <div className="metric-numbers">
+                  <strong>{item.achieved}</strong>
+                  <span>/ {item.target}</span>
+                </div>
+
+                <div className="input-list" style={{ marginTop: 8 }}>
+                  <label className="input-row">
+                    <span>Pencapaian</span>
+                    <input
+                      inputMode="numeric"
+                      type="number"
+                      min="0"
+                      value={item.achieved}
+                      onChange={(e) =>
+                        updatePenawaran(
+                          group,
+                          index,
+                          "achieved",
+                          e.target.value
+                        )
+                      }
+                    />
+                  </label>
+
+                  <label className="input-row">
+                    <span>Target</span>
+                    <input
+                      inputMode="numeric"
+                      type="number"
+                      min="0"
+                      value={item.target}
+                      onChange={(e) =>
+                        updatePenawaran(
+                          group,
+                          index,
+                          "target",
+                          e.target.value
+                        )
+                      }
+                    />
+                  </label>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -175,6 +281,20 @@ function App() {
                 />
               </label>
             ))}
+          </div>
+        </section>
+
+        <section className="section">
+          <div className="section-title">
+            <h2>Hasil Penawaran Langsung</h2>
+            <span>tersimpan otomatis</span>
+          </div>
+
+          <div className="metric-grid">
+            <PenawaranGroup title="APC" group="apc" />
+            <PenawaranGroup title="PWP" group="pwp" />
+            <PenawaranGroup title="PSM" group="psm" />
+            <PenawaranGroup title="SG" group="sg" />
           </div>
         </section>
 
