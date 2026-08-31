@@ -339,6 +339,7 @@ function Section({
             display: "flex",
             alignItems: "center",
             gap: 5,
+            transform: "translateX(-8px)",
           }}
         >
           <span>ⓘ</span>
@@ -502,6 +503,7 @@ function PeriodRows({
                   color,
                   fontSize: 10,
                   fontWeight: 800,
+                  transform: "translateX(-8px)",
                 }}
               >
                 {contribution.toFixed(2)}%
