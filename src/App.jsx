@@ -87,12 +87,10 @@ function App() {
   }
 
   function PenawaranGroup({ title, group }) {
-  function PenawaranGroup({ title, group }) {
-  const items =
+    const items =
     group === "apc"
       ? [{ ...state.penawaran.apc, label: "APC" }]
       : state.penawaran[group];
-
   return (
     <div className="metric-card">
       <div className="metric-head">
