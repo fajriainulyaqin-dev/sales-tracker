@@ -720,3 +720,72 @@ nav {
     padding: 12px !important;
   }
 }
+/* =========================================================
+   FINAL MOBILE FIX — TABLE & SECTION
+========================================================= */
+
+main section {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Area tabel */
+main section [style*="overflowX"] {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+}
+
+/* Tabel jangan terlalu lebar */
+main section [style*="overflowX"] > div {
+  min-width: 0 !important;
+  width: 100% !important;
+}
+
+/* Header kolom */
+main section [style*="overflowX"] > div > div {
+  min-width: 0 !important;
+}
+
+/* Semua input target */
+main section input {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Mobile */
+@media (max-width: 559px) {
+
+  main section {
+    padding: 14px 12px !important;
+  }
+
+  main section [style*="overflowX"] {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  main section [style*="overflowX"] > div {
+    width: 100% !important;
+  }
+
+  /* Ukuran teks tabel */
+  main section [style*="overflowX"] span,
+  main section [style*="overflowX"] div {
+    box-sizing: border-box;
+  }
+
+}
+
+/* HP kecil */
+@media (max-width: 380px) {
+
+  main section {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+}
