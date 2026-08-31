@@ -369,7 +369,7 @@ function Section({
 ========================================================= */
 
 const GRID =
-  "minmax(110px,1fr) 68px 68px 72px 76px";
+  "minmax(80px,1fr) 55px 55px 60px 60px";
 
 function ColumnHeader({ color }) {
   return (
