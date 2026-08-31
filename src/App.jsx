@@ -87,43 +87,53 @@ function App() {
   }
 
   function PenawaranGroup({ title, group }) {
-    const items =
-      group === "apc"
-        ? [{ ...state.penawaran.apc, label: "APC" }]
-        : state.penawaran[group];
+  function PenawaranGroup({ title, group }) {
+  const items =
+    group === "apc"
+      ? [{ ...state.penawaran.apc, label: "APC" }]
+      : state.penawaran[group];
 
-    return (
-      <div className="metric-card">
-        <div className="metric-head">
-          <span>{title}</span>
-        </div>
+  return (
+    <div className="metric-card">
+      <div className="metric-head">
+        <span>{title}</span>
+      </div>
 
-        <div className="input-list">
-          {items.map((item, index) => {
-            const progress = pct(item.achieved, item.target);
+      <div className="input-list">
+        {items.map((item, index) => {
+          const progress = pct(item.achieved, item.target);
 
-            return (
-              <div key={item.label}>
-                <div className="section-title">
-                  <span>{item.label}</span>
-                  <strong>{progress}%</strong>
-                </div>
+          return (
+            <div key={item.label}>
+              <div className="section-title">
+                <span>{item.label}</span>
+                <strong>{progress}%</strong>
+              </div>
 
-                <div className="progress-track">
-                  <div
-                    className="progress-fill"
-                    style={{ width: `${progress}%` }}
-                  />
-                </div>
+              <div className="progress-track">
+                <div
+                  className="progress-fill"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
 
-                <div className="metric-numbers">
-                  <strong>{item.achieved}</strong>
-                  <span>/ {item.target}</span>
-                </div>
+              <div className="metric-numbers">
+                <strong>{item.achieved}</strong>
+                <span>/ {item.target}</span>
+              </div>
 
-                <div className="input-list" style={{ marginTop: 8 }}>
+              <details style={{ marginTop: 8 }}>
+                <summary style={{ cursor: "pointer" }}>
+                  Edit {item.label}
+                </summary>
+
+                <div
+                  className="input-list"
+                  style={{ marginTop: 8 }}
+                >
                   <label className="input-row">
                     <span>Pencapaian</span>
+
                     <input
                       inputMode="numeric"
                       type="number"
@@ -142,6 +152,7 @@ function App() {
 
                   <label className="input-row">
                     <span>Target</span>
+
                     <input
                       inputMode="numeric"
                       type="number"
@@ -158,14 +169,14 @@ function App() {
                     />
                   </label>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              </details>
+            </div>
+          );
+        })}
       </div>
-    );
-  }
-
+    </div>
+  );
+}
   return (
     <div className="app-shell">
       <header className="topbar">
