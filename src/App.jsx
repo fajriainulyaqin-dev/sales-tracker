@@ -30,6 +30,66 @@ function statusColor(value) {
   return COLORS.red;
 }
 
+function localDateString() {
+  const d = new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function formatDate(dateString) {
+  if (!dateString) return "-";
+
+  const parts = String(dateString).split("-");
+  if (parts.length !== 3) return dateString;
+
+  return `${parts[2]}/${parts[1]}/${parts[0]}`;
+}
+
+function getMonthKey(dateString) {
+  if (!dateString) return "";
+  return String(dateString).slice(0, 7);
+}
+
+function getCurrentMonthKey() {
+  return localDateString().slice(0, 7);
+}
+
+function getPreviousMonthKey() {
+  const d = new Date();
+  d.setDate(1);
+  d.setMonth(d.getMonth() - 1);
+
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+
+  return `${year}-${month}`;
+}
+
+function monthLabel(monthKey) {
+  if (!monthKey) return "";
+
+  const [year, month] = monthKey.split("-");
+
+  const names = [
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
+  ];
+
+  return `${names[Number(month) - 1] || month} ${year}`;
+}
+
 const GRID = "minmax(0,1.35fr) 64px 64px 76px 76px";
 
 const center = {
@@ -648,11 +708,7 @@ function TargetSection({
   );
 }
 
-function TargetMetricRow({
-  label,
-  value,
-  onChange,
-}) {
+function TargetMetricRow({ label, value, onChange }) {
   return (
     <div
       style={{
@@ -673,10 +729,7 @@ function TargetMetricRow({
         {label}
       </div>
 
-      <TargetInput
-        value={value}
-        onChange={onChange}
-      />
+      <TargetInput value={value} onChange={onChange} />
     </div>
   );
 }
@@ -781,60 +834,26 @@ function TargetPage({
 }
 
 /* =====================================================
-   RIWAYAT INPUT
+   RIWAYAT
 ===================================================== */
 
 const HISTORY_FIELDS = [
-  {
-    key: "apc",
-    label: "APC",
-    color: COLORS.blue,
-  },
-  {
-    key: "pwp1",
-    label: "PWP 1",
-    color: COLORS.purple,
-  },
-  {
-    key: "pwp2",
-    label: "PWP 2",
-    color: COLORS.purple,
-  },
-  {
-    key: "psm1",
-    label: "PSM 1",
-    color: COLORS.orange,
-  },
-  {
-    key: "psm2",
-    label: "PSM 2",
-    color: COLORS.orange,
-  },
-  {
-    key: "psm3",
-    label: "PSM 3",
-    color: COLORS.orange,
-  },
-  {
-    key: "psm4",
-    label: "PSM 4",
-    color: COLORS.orange,
-  },
-  {
-    key: "sg1",
-    label: "SG 1",
-    color: COLORS.yellow,
-  },
-  {
-    key: "sg2",
-    label: "SG 2",
-    color: COLORS.yellow,
-  },
+  { key: "apc", label: "APC", color: COLORS.blue },
+  { key: "pwp1", label: "PWP 1", color: COLORS.purple },
+  { key: "pwp2", label: "PWP 2", color: COLORS.purple },
+  { key: "psm1", label: "PSM 1", color: COLORS.orange },
+  { key: "psm2", label: "PSM 2", color: COLORS.orange },
+  { key: "psm3", label: "PSM 3", color: COLORS.orange },
+  { key: "psm4", label: "PSM 4", color: COLORS.orange },
+  { key: "sg1", label: "SG 1", color: COLORS.yellow },
+  { key: "sg2", label: "SG 2", color: COLORS.yellow },
 ];
 
 function emptyHistoryForm() {
   return {
-    date: new Date().toISOString().slice(0, 10),
+    date: localDateString(),
+    shift: "1",
+    cashier: "",
     apc: 0,
     pwp1: 0,
     pwp2: 0,
@@ -872,10 +891,8 @@ function HistoryInput({ label, value, color, onChange }) {
         type="number"
         inputMode="numeric"
         min="0"
-        value={value}
-        onChange={(e) =>
-          onChange(e.target.value)
-        }
+        value={value ?? 0}
+        onChange={(e) => onChange(e.target.value)}
         style={{
           width: "100%",
           height: 38,
@@ -894,6 +911,83 @@ function HistoryInput({ label, value, color, onChange }) {
   );
 }
 
+function HistorySection({
+  title,
+  color,
+  icon,
+  badge,
+  children,
+}) {
+  return (
+    <section
+      style={{
+        background: COLORS.panel,
+        border: `1px solid ${color}45`,
+        borderRadius: 14,
+        padding: 14,
+        marginTop: 10,
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 9,
+          marginBottom: 8,
+        }}
+      >
+        <div
+          style={{
+            width: 34,
+            height: 34,
+            borderRadius: 10,
+            background: `${color}18`,
+            border: `1px solid ${color}35`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color,
+            fontSize: 18,
+            flexShrink: 0,
+          }}
+        >
+          {icon}
+        </div>
+
+        <div>
+          <div
+            style={{
+              fontSize: 14,
+              fontWeight: 800,
+            }}
+          >
+            {title}
+          </div>
+
+          {badge && (
+            <div
+              style={{
+                display: "inline-block",
+                marginTop: 4,
+                padding: "3px 8px",
+                borderRadius: 999,
+                background: `${color}20`,
+                color,
+                fontSize: 9,
+                fontWeight: 800,
+              }}
+            >
+              {badge}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {children}
+    </section>
+  );
+}
+
 /* =====================================================
    RIWAYAT PAGE
 ===================================================== */
@@ -902,8 +996,11 @@ function HistoryPage({
   history,
   form,
   setForm,
+  editingId,
   onSave,
   onDelete,
+  onEdit,
+  onCancelEdit,
 }) {
   return (
     <div>
@@ -929,11 +1026,15 @@ function HistoryPage({
             marginTop: 4,
           }}
         >
-          Input pencapaian harian di sini.
+          Input pencapaian berdasarkan tanggal, shift,
+          dan kasir.
         </div>
       </div>
 
-      {/* FORM */}
+      {/* =================================================
+          INFORMASI INPUT
+      ================================================= */}
+
       <section
         style={{
           background: COLORS.panel,
@@ -949,11 +1050,11 @@ function HistoryPage({
             marginBottom: 12,
           }}
         >
-          Tambah Pencapaian
+          {editingId ? "Edit Pencapaian" : "Tambah Pencapaian"}
         </div>
 
         {/* TANGGAL */}
-        <div style={{ marginBottom: 14 }}>
+        <div style={{ marginBottom: 12 }}>
           <div
             style={{
               color: COLORS.muted,
@@ -966,7 +1067,7 @@ function HistoryPage({
 
           <input
             type="date"
-            value={form.date}
+            value={form.date || ""}
             onChange={(e) =>
               setForm({
                 ...form,
@@ -987,7 +1088,117 @@ function HistoryPage({
           />
         </div>
 
-        {/* FIELD */}
+        {/* SHIFT + KASIR */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns:
+              "minmax(0,1fr) minmax(0,1.4fr)",
+            gap: 10,
+            marginBottom: 4,
+          }}
+        >
+          <div>
+            <div
+              style={{
+                color: COLORS.muted,
+                fontSize: 9,
+                marginBottom: 6,
+              }}
+            >
+              Shift
+            </div>
+
+            <select
+              value={form.shift || "1"}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  shift: e.target.value,
+                })
+              }
+              style={{
+                width: "100%",
+                height: 40,
+                boxSizing: "border-box",
+                borderRadius: 9,
+                border: `1px solid ${COLORS.border}`,
+                background: "#0b1221",
+                color: COLORS.text,
+                padding: "0 10px",
+                outline: "none",
+              }}
+            >
+              <option value="1">Shift 1</option>
+              <option value="2">Shift 2</option>
+              <option value="3">Shift 3</option>
+            </select>
+          </div>
+
+          <div>
+            <div
+              style={{
+                color: COLORS.muted,
+                fontSize: 9,
+                marginBottom: 6,
+              }}
+            >
+              Nama Kasir
+            </div>
+
+            <input
+              type="text"
+              value={form.cashier || ""}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  cashier: e.target.value,
+                })
+              }
+              placeholder="Nama kasir"
+              style={{
+                width: "100%",
+                height: 40,
+                boxSizing: "border-box",
+                borderRadius: 9,
+                border: `1px solid ${COLORS.border}`,
+                background: "#0b1221",
+                color: COLORS.text,
+                padding: "0 10px",
+                outline: "none",
+                fontSize: 11,
+              }}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* APC */}
+      <HistorySection
+        title="APC"
+        color={COLORS.blue}
+        icon="◎"
+      >
+        <HistoryInput
+          label="APC"
+          value={form.apc}
+          color={COLORS.blue}
+          onChange={(value) =>
+            setForm({
+              ...form,
+              apc: Number(value) || 0,
+            })
+          }
+        />
+      </HistorySection>
+
+      {/* PWP */}
+      <HistorySection
+        title="PWP"
+        color={COLORS.purple}
+        icon="🎁"
+        badge="PWP 1 + PWP 2"
+      >
         <div
           style={{
             display: "grid",
@@ -996,7 +1207,11 @@ function HistoryPage({
             gap: 8,
           }}
         >
-          {HISTORY_FIELDS.map((field) => (
+          {HISTORY_FIELDS.filter(
+            (field) =>
+              field.key === "pwp1" ||
+              field.key === "pwp2"
+          ).map((field) => (
             <HistoryInput
               key={field.key}
               label={field.label}
@@ -1012,33 +1227,128 @@ function HistoryPage({
             />
           ))}
         </div>
+      </HistorySection>
 
-        <button
-          onClick={onSave}
+      {/* PSM */}
+      <HistorySection
+        title="PSM"
+        color={COLORS.orange}
+        icon="♟"
+        badge="PSM 1 + PSM 2 + PSM 3 + PSM 4"
+      >
+        <div
           style={{
-            width: "100%",
-            height: 44,
-            marginTop: 14,
-            border: "none",
-            borderRadius: 10,
-            background: COLORS.blue,
-            color: "#06101f",
-            fontSize: 12,
-            fontWeight: 900,
+            display: "grid",
+            gridTemplateColumns:
+              "repeat(2,minmax(0,1fr))",
+            gap: 8,
           }}
         >
-          + SIMPAN PENCAPAIAN
-        </button>
-      </section>
+          {HISTORY_FIELDS.filter((field) =>
+            field.key.startsWith("psm")
+          ).map((field) => (
+            <HistoryInput
+              key={field.key}
+              label={field.label}
+              value={form[field.key]}
+              color={field.color}
+              onChange={(value) =>
+                setForm({
+                  ...form,
+                  [field.key]:
+                    Number(value) || 0,
+                })
+              }
+            />
+          ))}
+        </div>
+      </HistorySection>
 
-      {/* DAFTAR RIWAYAT */}
+      {/* SG */}
+      <HistorySection
+        title="Serba Gratis"
+        color={COLORS.yellow}
+        icon="●"
+        badge="SG 1 + SG 2"
+      >
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns:
+              "repeat(2,minmax(0,1fr))",
+            gap: 8,
+          }}
+        >
+          {HISTORY_FIELDS.filter((field) =>
+            field.key.startsWith("sg")
+          ).map((field) => (
+            <HistoryInput
+              key={field.key}
+              label={field.label}
+              value={form[field.key]}
+              color={field.color}
+              onChange={(value) =>
+                setForm({
+                  ...form,
+                  [field.key]:
+                    Number(value) || 0,
+                })
+              }
+            />
+          ))}
+        </div>
+      </HistorySection>
+
+      {/* BUTTON */}
+      <button
+        onClick={onSave}
+        style={{
+          width: "100%",
+          height: 46,
+          marginTop: 12,
+          border: "none",
+          borderRadius: 10,
+          background: COLORS.blue,
+          color: "#06101f",
+          fontSize: 12,
+          fontWeight: 900,
+        }}
+      >
+        {editingId
+          ? "✓ SIMPAN PERUBAHAN"
+          : "+ SIMPAN PENCAPAIAN"}
+      </button>
+
+      {editingId && (
+        <button
+          onClick={onCancelEdit}
+          style={{
+            width: "100%",
+            height: 42,
+            marginTop: 8,
+            borderRadius: 10,
+            border: `1px solid ${COLORS.border}`,
+            background: "transparent",
+            color: COLORS.muted,
+            fontSize: 11,
+            fontWeight: 800,
+          }}
+        >
+          BATAL EDIT
+        </button>
+      )}
+
+      {/* =================================================
+          DAFTAR RIWAYAT
+      ================================================= */}
+
       <section
         style={{
           background: COLORS.panel,
           border: `1px solid ${COLORS.border}`,
           borderRadius: 14,
           padding: 14,
-          marginTop: 12,
+          marginTop: 14,
         }}
       >
         <div
@@ -1061,12 +1371,21 @@ function HistoryPage({
           >
             Belum ada pencapaian.
             <br />
-            Masukkan pencapaian harian menggunakan
-            form di atas.
+            Masukkan pencapaian menggunakan form di atas.
           </div>
         ) : (
           [...history]
-            .reverse()
+            .sort((a, b) => {
+              const dateCompare = String(
+                b.date || ""
+              ).localeCompare(String(a.date || ""));
+
+              if (dateCompare !== 0) {
+                return dateCompare;
+              }
+
+              return Number(b.id || 0) - Number(a.id || 0);
+            })
             .map((item, index) => (
               <div
                 key={item.id || index}
@@ -1077,8 +1396,8 @@ function HistoryPage({
                       : `1px dotted ${COLORS.border}`,
                   padding:
                     index === 0
-                      ? "0 0 12px"
-                      : "12px 0",
+                      ? "0 0 14px"
+                      : "14px 0",
                 }}
               >
                 <div
@@ -1086,40 +1405,59 @@ function HistoryPage({
                     display: "flex",
                     justifyContent:
                       "space-between",
-                    alignItems: "center",
+                    alignItems: "flex-start",
                     gap: 8,
                   }}
                 >
-                  <div>
+                  <div style={{ minWidth: 0 }}>
                     <div
                       style={{
                         fontSize: 11,
                         fontWeight: 800,
                       }}
                     >
-                      {item.date}
+                      {formatDate(item.date)}
+                    </div>
+
+                    <div
+                      style={{
+                        color: COLORS.purple,
+                        fontSize: 9,
+                        fontWeight: 800,
+                        marginTop: 3,
+                      }}
+                    >
+                      Shift {item.shift || "-"}
+                      {" · "}
+                      {item.cashier ||
+                        "Nama kasir belum diisi"}
                     </div>
 
                     <div
                       style={{
                         color: COLORS.muted,
                         fontSize: 9,
-                        marginTop: 4,
+                        marginTop: 5,
+                        lineHeight: 1.6,
                       }}
                     >
-                      APC {fmt(item.apc)} · PWP{" "}
+                      APC {fmt(item.apc)}
+                      {" · "}
+                      PWP{" "}
                       {fmt(
                         Number(item.pwp1 || 0) +
                           Number(item.pwp2 || 0)
-                      )}{" "}
-                      · PSM{" "}
+                      )}
+                      {" · "}
+                      PSM{" "}
                       {fmt(
                         Number(item.psm1 || 0) +
                           Number(item.psm2 || 0) +
                           Number(item.psm3 || 0) +
                           Number(item.psm4 || 0)
-                      )}{" "}
-                      · SG{" "}
+                      )}
+                      {" · "}
+                      SG{" "}
                       {fmt(
                         Number(item.sg1 || 0) +
                           Number(item.sg2 || 0)
@@ -1127,24 +1465,51 @@ function HistoryPage({
                     </div>
                   </div>
 
-                  <button
-                    onClick={() =>
-                      onDelete(item.id)
-                    }
+                  <div
                     style={{
-                      border: `1px solid ${COLORS.red}55`,
-                      background:
-                        `${COLORS.red}15`,
-                      color: COLORS.red,
-                      borderRadius: 8,
-                      padding:
-                        "7px 9px",
-                      fontSize: 9,
-                      fontWeight: 800,
+                      display: "flex",
+                      gap: 5,
+                      flexShrink: 0,
                     }}
                   >
-                    Hapus
-                  </button>
+                    <button
+                      onClick={() =>
+                        onEdit(item)
+                      }
+                      style={{
+                        border:
+                          `1px solid ${COLORS.blue}55`,
+                        background:
+                          `${COLORS.blue}15`,
+                        color: COLORS.blue,
+                        borderRadius: 8,
+                        padding: "7px 8px",
+                        fontSize: 9,
+                        fontWeight: 800,
+                      }}
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        onDelete(item.id)
+                      }
+                      style={{
+                        border:
+                          `1px solid ${COLORS.red}55`,
+                        background:
+                          `${COLORS.red}15`,
+                        color: COLORS.red,
+                        borderRadius: 8,
+                        padding: "7px 8px",
+                        fontSize: 9,
+                        fontWeight: 800,
+                      }}
+                    >
+                      Hapus
+                    </button>
+                  </div>
                 </div>
               </div>
             ))
@@ -1169,6 +1534,12 @@ export default function App() {
   const [historyForm, setHistoryForm] =
     useState(emptyHistoryForm());
 
+  const [editingId, setEditingId] =
+    useState(null);
+
+  const [dashboardPeriod, setDashboardPeriod] =
+    useState("current");
+
   const penawaran = state.penawaran || {};
 
   const apc = penawaran.apc || {
@@ -1191,6 +1562,121 @@ export default function App() {
   const history = Array.isArray(state.history)
     ? state.history
     : [];
+
+  /* =====================================================
+     PERIODE DASHBOARD
+  ===================================================== */
+
+  const selectedMonthKey =
+    dashboardPeriod === "current"
+      ? getCurrentMonthKey()
+      : getPreviousMonthKey();
+
+  const selectedPeriodHistory = useMemo(() => {
+    return history.filter(
+      (item) =>
+        getMonthKey(item.date) ===
+        selectedMonthKey
+    );
+  }, [history, selectedMonthKey]);
+
+  /* =====================================================
+     HITUNG PENCAPAIAN PERIODE
+  ===================================================== */
+
+  const periodAchievements = useMemo(() => {
+    const totals = {
+      apc: 0,
+      pwp1: 0,
+      pwp2: 0,
+      psm1: 0,
+      psm2: 0,
+      psm3: 0,
+      psm4: 0,
+      sg1: 0,
+      sg2: 0,
+    };
+
+    selectedPeriodHistory.forEach((item) => {
+      totals.apc += Number(item.apc || 0);
+      totals.pwp1 += Number(item.pwp1 || 0);
+      totals.pwp2 += Number(item.pwp2 || 0);
+      totals.psm1 += Number(item.psm1 || 0);
+      totals.psm2 += Number(item.psm2 || 0);
+      totals.psm3 += Number(item.psm3 || 0);
+      totals.psm4 += Number(item.psm4 || 0);
+      totals.sg1 += Number(item.sg1 || 0);
+      totals.sg2 += Number(item.sg2 || 0);
+    });
+
+    return totals;
+  }, [selectedPeriodHistory]);
+
+  /* =====================================================
+     DATA DASHBOARD PERIODE
+  ===================================================== */
+
+  const dashboardApc = useMemo(
+    () => ({
+      ...apc,
+      achieved: periodAchievements.apc,
+    }),
+    [apc, periodAchievements.apc]
+  );
+
+  const dashboardPwp = useMemo(
+    () =>
+      pwp.map((row, index) => ({
+        ...row,
+        achieved:
+          index === 0
+            ? periodAchievements.pwp1
+            : periodAchievements.pwp2,
+      })),
+    [
+      pwp,
+      periodAchievements.pwp1,
+      periodAchievements.pwp2,
+    ]
+  );
+
+  const dashboardPsm = useMemo(
+    () =>
+      psm.map((row, index) => ({
+        ...row,
+        achieved:
+          index === 0
+            ? periodAchievements.psm1
+            : index === 1
+            ? periodAchievements.psm2
+            : index === 2
+            ? periodAchievements.psm3
+            : periodAchievements.psm4,
+      })),
+    [
+      psm,
+      periodAchievements.psm1,
+      periodAchievements.psm2,
+      periodAchievements.psm3,
+      periodAchievements.psm4,
+    ]
+  );
+
+  const dashboardSg = useMemo(
+    () =>
+      sg.map((row, index) => ({
+        ...row,
+        achieved:
+          index === 0
+            ? periodAchievements.sg1
+            : periodAchievements.sg2,
+      })),
+    [
+      sg,
+      periodAchievements.sg1,
+      periodAchievements.sg2,
+    ]
+  );
 
   /* =====================================================
      KPI
@@ -1223,8 +1709,8 @@ export default function App() {
     };
 
     const apcAchievement = pct(
-      apc.achieved,
-      apc.target
+      dashboardApc.achieved,
+      dashboardApc.target
     );
 
     return {
@@ -1234,11 +1720,16 @@ export default function App() {
           (apcAchievement * 25) / 100,
       },
 
-      pwp: calc(pwp, 25),
-      psm: calc(psm, 20),
-      sg: calc(sg, 30),
+      pwp: calc(dashboardPwp, 25),
+      psm: calc(dashboardPsm, 20),
+      sg: calc(dashboardSg, 30),
     };
-  }, [apc, pwp, psm, sg]);
+  }, [
+    dashboardApc,
+    dashboardPwp,
+    dashboardPsm,
+    dashboardSg,
+  ]);
 
   /* =====================================================
      SAVE
@@ -1266,11 +1757,7 @@ export default function App() {
     });
   }
 
-  function updateRows(
-    type,
-    index,
-    value
-  ) {
+  function updateRows(type, index, value) {
     commit({
       ...state,
       penawaran: {
@@ -1291,12 +1778,10 @@ export default function App() {
   }
 
   /* =====================================================
-     HITUNG ULANG PENCAPAIAN DARI RIWAYAT
+     HITUNG ULANG PENCAPAIAN DARI SEMUA RIWAYAT
   ===================================================== */
 
-  function rebuildAchievements(
-    nextHistory
-  ) {
+  function rebuildAchievements(nextHistory) {
     const totals = {
       apc: 0,
       pwp1: 0,
@@ -1371,7 +1856,7 @@ export default function App() {
   }
 
   /* =====================================================
-     SIMPAN RIWAYAT
+     SIMPAN / UPDATE RIWAYAT
   ===================================================== */
 
   function saveHistory() {
@@ -1380,15 +1865,34 @@ export default function App() {
       return;
     }
 
-    const item = {
-      ...historyForm,
-      id: Date.now(),
-    };
+    if (!historyForm.cashier.trim()) {
+      window.alert("Nama kasir belum diisi.");
+      return;
+    }
 
-    const nextHistory = [
-      ...history,
-      item,
-    ];
+    let nextHistory;
+
+    if (editingId) {
+      nextHistory = history.map((item) =>
+        item.id === editingId
+          ? {
+              ...item,
+              ...historyForm,
+              id: editingId,
+            }
+          : item
+      );
+    } else {
+      const item = {
+        ...historyForm,
+        id: Date.now(),
+      };
+
+      nextHistory = [
+        ...history,
+        item,
+      ];
+    }
 
     const nextState =
       rebuildAchievements(nextHistory);
@@ -1399,9 +1903,50 @@ export default function App() {
       emptyHistoryForm()
     );
 
+    setEditingId(null);
+
     window.alert(
-      "Pencapaian berhasil disimpan."
+      editingId
+        ? "Pencapaian berhasil diperbarui."
+        : "Pencapaian berhasil disimpan."
     );
+  }
+
+  /* =====================================================
+     EDIT RIWAYAT
+  ===================================================== */
+
+  function editHistory(item) {
+    setHistoryForm({
+      date: item.date || localDateString(),
+      shift: item.shift || "1",
+      cashier: item.cashier || "",
+      apc: Number(item.apc || 0),
+      pwp1: Number(item.pwp1 || 0),
+      pwp2: Number(item.pwp2 || 0),
+      psm1: Number(item.psm1 || 0),
+      psm2: Number(item.psm2 || 0),
+      psm3: Number(item.psm3 || 0),
+      psm4: Number(item.psm4 || 0),
+      sg1: Number(item.sg1 || 0),
+      sg2: Number(item.sg2 || 0),
+    });
+
+    setEditingId(item.id);
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }
+
+  /* =====================================================
+     BATAL EDIT
+  ===================================================== */
+
+  function cancelEdit() {
+    setEditingId(null);
+    setHistoryForm(emptyHistoryForm());
   }
 
   /* =====================================================
@@ -1426,6 +1971,13 @@ export default function App() {
       rebuildAchievements(nextHistory);
 
     commit(nextState);
+
+    if (editingId === id) {
+      setEditingId(null);
+      setHistoryForm(
+        emptyHistoryForm()
+      );
+    }
   }
 
   /* =====================================================
@@ -1447,6 +1999,7 @@ export default function App() {
     setHistoryForm(
       emptyHistoryForm()
     );
+    setEditingId(null);
   }
 
   /* =====================================================
@@ -1509,6 +2062,137 @@ export default function App() {
 
         {activeTab === "dashboard" && (
           <>
+            {/* PERIODE */}
+            <section
+              style={{
+                background: COLORS.panel,
+                border:
+                  `1px solid ${COLORS.border}`,
+                borderRadius: 14,
+                padding: 12,
+                marginBottom: 10,
+              }}
+            >
+              <div
+                style={{
+                  fontSize: 12,
+                  fontWeight: 800,
+                  marginBottom: 8,
+                }}
+              >
+                Periode Dashboard
+              </div>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns:
+                    "repeat(2,minmax(0,1fr))",
+                  gap: 8,
+                }}
+              >
+                <button
+                  onClick={() =>
+                    setDashboardPeriod(
+                      "current"
+                    )
+                  }
+                  style={{
+                    height: 40,
+                    borderRadius: 9,
+                    border:
+                      `1px solid ${
+                        dashboardPeriod ===
+                        "current"
+                          ? COLORS.blue
+                          : COLORS.border
+                      }`,
+                    background:
+                      dashboardPeriod ===
+                      "current"
+                        ? `${COLORS.blue}18`
+                        : "#0b1221",
+                    color:
+                      dashboardPeriod ===
+                      "current"
+                        ? COLORS.blue
+                        : COLORS.muted,
+                    fontSize: 10,
+                    fontWeight: 800,
+                  }}
+                >
+                  Periode Berjalan
+                  <div
+                    style={{
+                      fontSize: 8,
+                      marginTop: 2,
+                    }}
+                  >
+                    {monthLabel(
+                      getCurrentMonthKey()
+                    )}
+                  </div>
+                </button>
+
+                <button
+                  onClick={() =>
+                    setDashboardPeriod(
+                      "previous"
+                    )
+                  }
+                  style={{
+                    height: 40,
+                    borderRadius: 9,
+                    border:
+                      `1px solid ${
+                        dashboardPeriod ===
+                        "previous"
+                          ? COLORS.purple
+                          : COLORS.border
+                      }`,
+                    background:
+                      dashboardPeriod ===
+                      "previous"
+                        ? `${COLORS.purple}18`
+                        : "#0b1221",
+                    color:
+                      dashboardPeriod ===
+                      "previous"
+                        ? COLORS.purple
+                        : COLORS.muted,
+                    fontSize: 10,
+                    fontWeight: 800,
+                  }}
+                >
+                  Bulan Lalu
+                  <div
+                    style={{
+                      fontSize: 8,
+                      marginTop: 2,
+                    }}
+                  >
+                    {monthLabel(
+                      getPreviousMonthKey()
+                    )}
+                  </div>
+                </button>
+              </div>
+
+              <div
+                style={{
+                  color: COLORS.muted,
+                  fontSize: 8,
+                  marginTop: 8,
+                  lineHeight: 1.5,
+                }}
+              >
+                Menampilkan pencapaian{" "}
+                {monthLabel(selectedMonthKey)}.
+                Target mengikuti Target aktif.
+              </div>
+            </section>
+
+            {/* KPI */}
             <div
               style={{
                 display: "grid",
@@ -1587,7 +2271,7 @@ export default function App() {
               icon="◎"
               color={COLORS.blue}
             >
-              <ApcRow data={apc} />
+              <ApcRow data={dashboardApc} />
             </Section>
 
             <Section
@@ -1599,7 +2283,7 @@ export default function App() {
               color={COLORS.purple}
             >
               <MetricRows
-                rows={pwp}
+                rows={dashboardPwp}
                 color={COLORS.purple}
                 weight={25}
               />
@@ -1614,7 +2298,7 @@ export default function App() {
               color={COLORS.orange}
             >
               <MetricRows
-                rows={psm}
+                rows={dashboardPsm}
                 color={COLORS.orange}
                 weight={20}
               />
@@ -1629,7 +2313,7 @@ export default function App() {
               color={COLORS.yellow}
             >
               <MetricRows
-                rows={sg}
+                rows={dashboardSg}
                 color={COLORS.yellow}
                 weight={30}
               />
@@ -1646,8 +2330,11 @@ export default function App() {
             history={history}
             form={historyForm}
             setForm={setHistoryForm}
+            editingId={editingId}
             onSave={saveHistory}
             onDelete={deleteHistory}
+            onEdit={editHistory}
+            onCancelEdit={cancelEdit}
           />
         )}
 
