@@ -43,7 +43,8 @@ const initialState = {
     ]
   },
 
-  sales: []
+  sales: [],
+  history: []
 };
 
 function mergeState(saved) {
@@ -84,8 +85,51 @@ function mergeState(saved) {
       pwp: saved.penawaran?.pwp || base.penawaran.pwp,
       psm: saved.penawaran?.psm || base.penawaran.psm,
       sg: saved.penawaran?.sg || base.penawaran.sg
-    }
+    },
+
+    sales: Array.isArray(saved.sales) ? saved.sales : [],
+    history: Array.isArray(saved.history) ? saved.history : []
   };
+}
+
+function getMonthKey(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+
+  return `${year}-${month}`;
+}
+
+function getPreviousMonthKey(date = new Date()) {
+  const previous = new Date(
+    date.getFullYear(),
+    date.getMonth() - 1,
+    1
+  );
+
+  return getMonthKey(previous);
+}
+
+function getHistoryMonth(item) {
+  if (!item || !item.date) return null;
+
+  const value = String(item.date);
+
+  if (!/^\d{4}-\d{2}/.test(value)) {
+    return null;
+  }
+
+  return value.slice(0, 7);
+}
+
+function cleanupOldHistory(history) {
+  const currentMonth = getMonthKey();
+  const previousMonth = getPreviousMonthKey();
+
+  return history.filter((item) => {
+    const month = getHistoryMonth(item);
+
+    return month === currentMonth || month === previousMonth;
+  });
 }
 
 export function loadState() {
@@ -96,17 +140,42 @@ export function loadState() {
       return structuredClone(initialState);
     }
 
-    return mergeState(JSON.parse(raw));
+    const saved = JSON.parse(raw);
+    const state = mergeState(saved);
+
+    // Simpan hanya riwayat bulan berjalan
+    // dan satu bulan sebelumnya.
+    const cleanedHistory = cleanupOldHistory(state.history);
+
+    if (cleanedHistory.length !== state.history.length) {
+      state.history = cleanedHistory;
+
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(state)
+      );
+    }
+
+    return state;
   } catch {
     return structuredClone(initialState);
   }
 }
 
 export function saveState(state) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  const nextState = mergeState(state);
+
+  // Selalu bersihkan riwayat lama sebelum disimpan.
+  nextState.history = cleanupOldHistory(nextState.history);
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(nextState)
+  );
 }
 
 export function resetState() {
   localStorage.removeItem(STORAGE_KEY);
+
   return structuredClone(initialState);
 }
