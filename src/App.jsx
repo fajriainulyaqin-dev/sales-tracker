@@ -1166,20 +1166,72 @@ const HISTORY_FIELDS = [
   { key: "sg2", label: "SG 2", color: COLORS.yellow },
 ];
 
+function getHistoryPeriod(dateString) {
+  const day = Number(String(dateString || "").slice(8, 10));
+
+  if (!day || day < 1 || day > 31) {
+    return {
+      pwpKey: "pwp1",
+      pwpLabel: "PWP 1",
+      psmKey: "psm1",
+      psmLabel: "PSM 1",
+      sgKey: "sg1",
+      sgLabel: "SG 1",
+    };
+  }
+
+  if (day <= 7) {
+    return {
+      pwpKey: "pwp1",
+      pwpLabel: "PWP 1",
+      psmKey: "psm1",
+      psmLabel: "PSM 1",
+      sgKey: "sg1",
+      sgLabel: "SG 1",
+    };
+  }
+
+  if (day <= 15) {
+    return {
+      pwpKey: "pwp1",
+      pwpLabel: "PWP 1",
+      psmKey: "psm2",
+      psmLabel: "PSM 2",
+      sgKey: "sg1",
+      sgLabel: "SG 1",
+    };
+  }
+
+  if (day <= 22) {
+    return {
+      pwpKey: "pwp2",
+      pwpLabel: "PWP 2",
+      psmKey: "psm3",
+      psmLabel: "PSM 3",
+      sgKey: "sg2",
+      sgLabel: "SG 2",
+    };
+  }
+
+  return {
+    pwpKey: "pwp2",
+    pwpLabel: "PWP 2",
+    psmKey: "psm4",
+    psmLabel: "PSM 4",
+    sgKey: "sg2",
+    sgLabel: "SG 2",
+  };
+}
+
 function emptyHistoryForm() {
   return {
     date: localDateString(),
     shift: "1",
     cashier: "",
-    apc: 0,
-    pwp1: 0,
-    pwp2: 0,
-    psm1: 0,
-    psm2: 0,
-    psm3: 0,
-    psm4: 0,
-    sg1: 0,
-    sg2: 0,
+    apcValue: 0,
+    pwpValue: 0,
+    psmValue: 0,
+    sgValue: 0,
   };
 }
 
@@ -1322,6 +1374,15 @@ function HistoryPage({
   onEdit,
   onCancelEdit,
 }) {
+  const period = getHistoryPeriod(form.date);
+
+  function setValue(key, value) {
+    setForm({
+      ...form,
+      [key]: Number(value) || 0,
+    });
+  }
+
   return (
     <div>
       <div
@@ -1493,16 +1554,14 @@ function HistoryPage({
         title="APC"
         color={COLORS.blue}
         icon="◎"
+        badge="Otomatis berdasarkan tanggal"
       >
         <HistoryInput
           label="APC"
-          value={form.apc}
+          value={form.apcValue}
           color={COLORS.blue}
           onChange={(value) =>
-            setForm({
-              ...form,
-              apc: Number(value) || 0,
-            })
+            setValue("apcValue", value)
           }
         />
       </HistorySection>
@@ -1511,105 +1570,64 @@ function HistoryPage({
         title="PWP"
         color={COLORS.purple}
         icon="🎁"
-        badge="PWP 1 + PWP 2"
+        badge={`${period.pwpLabel} · otomatis`}
       >
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns:
-              "repeat(2,minmax(0,1fr))",
-            gap: 8,
-          }}
-        >
-          {HISTORY_FIELDS.filter(
-            (field) =>
-              field.key === "pwp1" ||
-              field.key === "pwp2"
-          ).map((field) => (
-            <HistoryInput
-              key={field.key}
-              label={field.label}
-              value={form[field.key]}
-              color={field.color}
-              onChange={(value) =>
-                setForm({
-                  ...form,
-                  [field.key]:
-                    Number(value) || 0,
-                })
-              }
-            />
-          ))}
-        </div>
+        <HistoryInput
+          label={period.pwpLabel}
+          value={form.pwpValue}
+          color={COLORS.purple}
+          onChange={(value) =>
+            setValue("pwpValue", value)
+          }
+        />
       </HistorySection>
 
       <HistorySection
         title="PSM"
         color={COLORS.orange}
         icon="♟"
-        badge="PSM 1 + PSM 2 + PSM 3 + PSM 4"
+        badge={`${period.psmLabel} · otomatis`}
       >
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns:
-              "repeat(2,minmax(0,1fr))",
-            gap: 8,
-          }}
-        >
-          {HISTORY_FIELDS.filter((field) =>
-            field.key.startsWith("psm")
-          ).map((field) => (
-            <HistoryInput
-              key={field.key}
-              label={field.label}
-              value={form[field.key]}
-              color={field.color}
-              onChange={(value) =>
-                setForm({
-                  ...form,
-                  [field.key]:
-                    Number(value) || 0,
-                })
-              }
-            />
-          ))}
-        </div>
+        <HistoryInput
+          label={period.psmLabel}
+          value={form.psmValue}
+          color={COLORS.orange}
+          onChange={(value) =>
+            setValue("psmValue", value)
+          }
+        />
       </HistorySection>
 
       <HistorySection
         title="Serba Gratis"
         color={COLORS.yellow}
         icon="●"
-        badge="SG 1 + SG 2"
+        badge={`${period.sgLabel} · otomatis`}
       >
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns:
-              "repeat(2,minmax(0,1fr))",
-            gap: 8,
-          }}
-        >
-          {HISTORY_FIELDS.filter((field) =>
-            field.key.startsWith("sg")
-          ).map((field) => (
-            <HistoryInput
-              key={field.key}
-              label={field.label}
-              value={form[field.key]}
-              color={field.color}
-              onChange={(value) =>
-                setForm({
-                  ...form,
-                  [field.key]:
-                    Number(value) || 0,
-                })
-              }
-            />
-          ))}
-        </div>
+        <HistoryInput
+          label={period.sgLabel}
+          value={form.sgValue}
+          color={COLORS.yellow}
+          onChange={(value) =>
+            setValue("sgValue", value)
+          }
+        />
       </HistorySection>
+
+      <div
+        style={{
+          color: COLORS.muted,
+          fontSize: 9,
+          lineHeight: 1.6,
+          marginTop: 10,
+          padding: "0 2px",
+        }}
+      >
+        Periode ditentukan otomatis dari tanggal:
+        PWP & SG tanggal 1–15 / 16–akhir bulan,
+        sedangkan PSM tanggal 1–7 / 8–15 / 16–22 /
+        23–akhir bulan.
+      </div>
 
       <button
         onClick={onSave}
@@ -1699,133 +1717,139 @@ function HistoryPage({
                 Number(a.id || 0)
               );
             })
-            .map((item, index) => (
-              <div
-                key={item.id || index}
-                style={{
-                  borderTop:
-                    index === 0
-                      ? "none"
-                      : `1px dotted ${COLORS.border}`,
-                  padding:
-                    index === 0
-                      ? "0 0 14px"
-                      : "14px 0",
-                }}
-              >
+            .map((item, index) => {
+              const itemPeriod =
+                getHistoryPeriod(item.date);
+
+              return (
                 <div
+                  key={item.id || index}
                   style={{
-                    display: "flex",
-                    justifyContent:
-                      "space-between",
-                    alignItems: "flex-start",
-                    gap: 8,
+                    borderTop:
+                      index === 0
+                        ? "none"
+                        : `1px dotted ${COLORS.border}`,
+                    padding:
+                      index === 0
+                        ? "0 0 14px"
+                        : "14px 0",
                   }}
                 >
                   <div
                     style={{
-                      minWidth: 0,
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontSize: 11,
-                        fontWeight: 800,
-                      }}
-                    >
-                      {formatDate(item.date)}
-                    </div>
-
-                    <div
-                      style={{
-                        color: COLORS.purple,
-                        fontSize: 9,
-                        fontWeight: 800,
-                        marginTop: 3,
-                      }}
-                    >
-                      Shift {item.shift || "-"}
-                      {" · "}
-                      {item.cashier ||
-                        "Nama kasir belum diisi"}
-                    </div>
-
-                    <div
-                      style={{
-                        color: COLORS.muted,
-                        fontSize: 9,
-                        marginTop: 5,
-                        lineHeight: 1.6,
-                      }}
-                    >
-                      APC {fmt(item.apc)}
-                      {" · "}
-                      PWP{" "}
-                      {fmt(
-                        Number(item.pwp1 || 0) +
-                          Number(item.pwp2 || 0)
-                      )}
-                      {" · "}
-                      PSM{" "}
-                      {fmt(
-                        Number(item.psm1 || 0) +
-                          Number(item.psm2 || 0) +
-                          Number(item.psm3 || 0) +
-                          Number(item.psm4 || 0)
-                      )}
-                      {" · "}
-                      SG{" "}
-                      {fmt(
-                        Number(item.sg1 || 0) +
-                          Number(item.sg2 || 0)
-                      )}
-                    </div>
-                  </div>
-
-                  <div
-                    style={{
                       display: "flex",
-                      gap: 5,
-                      flexShrink: 0,
+                      justifyContent:
+                        "space-between",
+                      alignItems: "flex-start",
+                      gap: 8,
                     }}
                   >
-                    <button
-                      onClick={() =>
-                        onEdit(item)
-                      }
-                      style={{
-                        border: `1px solid ${COLORS.blue}55`,
-                        background: `${COLORS.blue}15`,
-                        color: COLORS.blue,
-                        borderRadius: 8,
-                        padding: "7px 8px",
-                        fontSize: 9,
-                        fontWeight: 800,
-                      }}
-                    >
-                      Edit
-                    </button>
+                    <div style={{ minWidth: 0 }}>
+                      <div
+                        style={{
+                          fontSize: 11,
+                          fontWeight: 800,
+                        }}
+                      >
+                        {formatDate(item.date)}
+                      </div>
 
-                    <button
-                      onClick={() =>
-                        onDelete(item.id)
-                      }
+                      <div
+                        style={{
+                          color: COLORS.purple,
+                          fontSize: 9,
+                          fontWeight: 800,
+                          marginTop: 3,
+                        }}
+                      >
+                        Shift {item.shift || "-"}
+                        {" · "}
+                        {item.cashier ||
+                          "Nama kasir belum diisi"}
+                      </div>
+
+                      <div
+                        style={{
+                          color: COLORS.muted,
+                          fontSize: 9,
+                          marginTop: 5,
+                          lineHeight: 1.6,
+                        }}
+                      >
+                        APC {fmt(item.apc)}
+                        {" · "}
+                        {itemPeriod.pwpLabel}{" "}
+                        {fmt(
+                          Number(
+                            item[itemPeriod.pwpKey] || 0
+                          )
+                        )}
+                        {" · "}
+                        {itemPeriod.psmLabel}{" "}
+                        {fmt(
+                          Number(
+                            item[itemPeriod.psmKey] || 0
+                          )
+                        )}
+                        {" · "}
+                        {itemPeriod.sgLabel}{" "}
+                        {fmt(
+                          Number(
+                            item[itemPeriod.sgKey] || 0
+                          )
+                        )}
+                      </div>
+                    </div>
+
+                    <div
                       style={{
-                        border: `1px solid ${COLORS.red}55`,
-                        background: `${COLORS.red}15`,
-                        color: COLORS.red,
-                        borderRadius: 8,
-                        padding: "7px 8px",
-                        fontSize: 9,
-                        fontWeight: 800,
+                        display: "flex",
+                        gap: 5,
+                        flexShrink: 0,
                       }}
                     >
-                      Hapus
-                    </button>
+                      <button
+                        onClick={() =>
+                          onEdit(item)
+                        }
+                        style={{
+                          border:
+                            `1px solid ${COLORS.blue}55`,
+                          background:
+                            `${COLORS.blue}15`,
+                          color: COLORS.blue,
+                          borderRadius: 8,
+                          padding: "7px 8px",
+                          fontSize: 9,
+                          fontWeight: 800,
+                        }}
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          onDelete(item.id)
+                        }
+                        style={{
+                          border:
+                            `1px solid ${COLORS.red}55`,
+                          background:
+                            `${COLORS.red}15`,
+                          color: COLORS.red,
+                          borderRadius: 8,
+                          padding: "7px 8px",
+                          fontSize: 9,
+                          fontWeight: 800,
+                        }}
+                      >
+                        Hapus
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))
+              );
+            })
         )}
       </section>
     </div>
@@ -2337,28 +2361,65 @@ export default function App() {
       return;
     }
 
+    const period = getHistoryPeriod(
+      historyForm.date
+    );
+
+    const periodValues = {
+      apc: 0,
+      pwp1: 0,
+      pwp2: 0,
+      psm1: 0,
+      psm2: 0,
+      psm3: 0,
+      psm4: 0,
+      sg1: 0,
+      sg2: 0,
+    };
+
+    /*
+      Satu kolom input per indikator.
+      Periode tujuan ditentukan otomatis dari tanggal.
+    */
+    periodValues.apc = Number(
+      historyForm.apcValue ?? 0
+    );
+
+    periodValues[period.pwpKey] = Number(
+      historyForm.pwpValue ?? historyForm.value ?? 0
+    );
+    periodValues[period.psmKey] = Number(
+      historyForm.psmValue ?? historyForm.value ?? 0
+    );
+    periodValues[period.sgKey] = Number(
+      historyForm.sgValue ?? historyForm.value ?? 0
+    );
+
+    const itemData = {
+      date: historyForm.date,
+      shift: historyForm.shift || "1",
+      cashier: historyForm.cashier.trim(),
+      ...periodValues,
+    };
+
     let nextHistory;
 
     if (editingId) {
-      nextHistory = history.map(
-        (item) =>
-          item.id === editingId
-            ? {
-                ...item,
-                ...historyForm,
-                id: editingId,
-              }
-            : item
+      nextHistory = history.map((item) =>
+        item.id === editingId
+          ? {
+              ...itemData,
+              id: editingId,
+            }
+          : item
       );
     } else {
-      const item = {
-        ...historyForm,
-        id: Date.now(),
-      };
-
       nextHistory = [
         ...history,
-        item,
+        {
+          ...itemData,
+          id: Date.now(),
+        },
       ];
     }
 
@@ -2382,6 +2443,10 @@ export default function App() {
   ===================================================== */
 
   function editHistory(item) {
+    const period = getHistoryPeriod(
+      item.date || localDateString()
+    );
+
     setHistoryForm({
       date:
         item.date ||
@@ -2393,15 +2458,19 @@ export default function App() {
       cashier:
         item.cashier || "",
 
-      apc: Number(item.apc || 0),
-      pwp1: Number(item.pwp1 || 0),
-      pwp2: Number(item.pwp2 || 0),
-      psm1: Number(item.psm1 || 0),
-      psm2: Number(item.psm2 || 0),
-      psm3: Number(item.psm3 || 0),
-      psm4: Number(item.psm4 || 0),
-      sg1: Number(item.sg1 || 0),
-      sg2: Number(item.sg2 || 0),
+      apcValue: Number(item.apc || 0),
+
+      pwpValue: Number(
+        item[period.pwpKey] || 0
+      ),
+
+      psmValue: Number(
+        item[period.psmKey] || 0
+      ),
+
+      sgValue: Number(
+        item[period.sgKey] || 0
+      ),
     });
 
     setEditingId(item.id);
