@@ -2830,57 +2830,377 @@ export default function App() {
             SETTINGS
         ================================================= */}
 
-        {activeTab === "settings" && (
+        {/* =================================================
+    SETTINGS
+================================================= */}
+
+{activeTab === "settings" && (
+  <div>
+    <div
+      style={{
+        marginTop: 10,
+        marginBottom: 12,
+      }}
+    >
+      <div
+        style={{
+          fontSize: 20,
+          fontWeight: 900,
+        }}
+      >
+        Pengaturan
+      </div>
+
+      <div
+        style={{
+          color: COLORS.muted,
+          fontSize: 10,
+          marginTop: 4,
+        }}
+      >
+        Pengaturan aplikasi dan informasi penyimpanan.
+      </div>
+    </div>
+
+    {/* PENYIMPANAN */}
+    <section
+      style={{
+        background: COLORS.panel,
+        border: `1px solid ${COLORS.blue}45`,
+        borderRadius: 14,
+        padding: 14,
+        marginTop: 10,
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 9,
+          marginBottom: 12,
+        }}
+      >
+        <div
+          style={{
+            width: 34,
+            height: 34,
+            borderRadius: 10,
+            background: `${COLORS.blue}18`,
+            border: `1px solid ${COLORS.blue}35`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: COLORS.blue,
+            fontSize: 18,
+          }}
+        >
+          💾
+        </div>
+
+        <div>
           <div
             style={{
-              background: COLORS.panel,
-              border:
-                `1px solid ${COLORS.border}`,
-              borderRadius: 14,
-              padding: 18,
-              marginTop: 10,
+              fontSize: 14,
+              fontWeight: 800,
             }}
           >
-            <div
-              style={{
-                fontSize: 18,
-                fontWeight: 800,
-              }}
-            >
-              Pengaturan
-            </div>
-
-            <div
-              style={{
-                color: COLORS.muted,
-                fontSize: 10,
-                marginTop: 6,
-              }}
-            >
-              Pengaturan aplikasi dan reset
-              data.
-            </div>
-
-            <button
-              onClick={handleReset}
-              style={{
-                width: "100%",
-                height: 42,
-                marginTop: 20,
-                borderRadius: 9,
-                border:
-                  `1px solid ${COLORS.red}55`,
-                background:
-                  `${COLORS.red}15`,
-                color: COLORS.red,
-                fontWeight: 800,
-              }}
-            >
-              Reset Semua Data
-            </button>
+            Penyimpanan Data
           </div>
-        )}
-      </main>
+
+          <div
+            style={{
+              color: COLORS.muted,
+              fontSize: 9,
+              marginTop: 3,
+            }}
+          >
+            Data tersimpan secara lokal.
+          </div>
+        </div>
+      </div>
+
+      <div
+        style={{
+          background: "#0d1423",
+          border: `1px solid ${COLORS.border}`,
+          borderRadius: 10,
+          padding: 11,
+        }}
+      >
+        <div
+          style={{
+            color: COLORS.muted,
+            fontSize: 9,
+          }}
+        >
+          Metode Penyimpanan
+        </div>
+
+        <div
+          style={{
+            color: COLORS.text,
+            fontSize: 12,
+            fontWeight: 800,
+            marginTop: 4,
+          }}
+        >
+          Local Storage
+        </div>
+
+        <div
+          style={{
+            color: COLORS.muted,
+            fontSize: 9,
+            lineHeight: 1.6,
+            marginTop: 5,
+          }}
+        >
+          Data disimpan di perangkat/browser ini.
+          Saat ini aplikasi belum menggunakan database
+          online.
+        </div>
+      </div>
+    </section>
+
+    {/* RETENSI DATA */}
+    <section
+      style={{
+        background: COLORS.panel,
+        border: `1px solid ${COLORS.purple}45`,
+        borderRadius: 14,
+        padding: 14,
+        marginTop: 10,
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 9,
+          marginBottom: 12,
+        }}
+      >
+        <div
+          style={{
+            width: 34,
+            height: 34,
+            borderRadius: 10,
+            background: `${COLORS.purple}18`,
+            border: `1px solid ${COLORS.purple}35`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: COLORS.purple,
+            fontSize: 18,
+          }}
+        >
+          🗓️
+        </div>
+
+        <div>
+          <div
+            style={{
+              fontSize: 14,
+              fontWeight: 800,
+            }}
+          >
+            Retensi Data
+          </div>
+
+          <div
+            style={{
+              color: COLORS.muted,
+              fontSize: 9,
+              marginTop: 3,
+            }}
+          >
+            Pengelolaan periode yang disimpan.
+          </div>
+        </div>
+      </div>
+
+      <div
+        style={{
+          background: "#0d1423",
+          border: `1px solid ${COLORS.border}`,
+          borderRadius: 10,
+          padding: 11,
+        }}
+      >
+        <div
+          style={{
+            color: COLORS.muted,
+            fontSize: 9,
+          }}
+        >
+          Periode yang dipertahankan
+        </div>
+
+        <div
+          style={{
+            color: COLORS.text,
+            fontSize: 12,
+            fontWeight: 800,
+            marginTop: 4,
+          }}
+        >
+          2 Periode Terakhir
+        </div>
+
+        <div
+          style={{
+            color: COLORS.muted,
+            fontSize: 9,
+            lineHeight: 1.6,
+            marginTop: 5,
+          }}
+        >
+          Bulan berjalan dan bulan sebelumnya.
+          Data dari periode yang lebih lama akan
+          dihapus otomatis.
+        </div>
+      </div>
+    </section>
+
+    {/* RESET DATA */}
+    <section
+      style={{
+        background: COLORS.panel,
+        border: `1px solid ${COLORS.red}45`,
+        borderRadius: 14,
+        padding: 14,
+        marginTop: 10,
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 9,
+          marginBottom: 12,
+        }}
+      >
+        <div
+          style={{
+            width: 34,
+            height: 34,
+            borderRadius: 10,
+            background: `${COLORS.red}18`,
+            border: `1px solid ${COLORS.red}35`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: COLORS.red,
+            fontSize: 18,
+          }}
+        >
+          ⚠️
+        </div>
+
+        <div>
+          <div
+            style={{
+              fontSize: 14,
+              fontWeight: 800,
+            }}
+          >
+            Reset Data
+          </div>
+
+          <div
+            style={{
+              color: COLORS.muted,
+              fontSize: 9,
+              marginTop: 3,
+            }}
+          >
+            Hapus seluruh data aplikasi.
+          </div>
+        </div>
+      </div>
+
+      <button
+        onClick={handleReset}
+        style={{
+          width: "100%",
+          height: 44,
+          borderRadius: 9,
+          border: `1px solid ${COLORS.red}55`,
+          background: `${COLORS.red}15`,
+          color: COLORS.red,
+          fontSize: 11,
+          fontWeight: 900,
+        }}
+      >
+        Reset Semua Data
+      </button>
+
+      <div
+        style={{
+          color: COLORS.muted,
+          fontSize: 8,
+          lineHeight: 1.5,
+          marginTop: 8,
+        }}
+      >
+        Tindakan ini akan menghapus seluruh target
+        dan riwayat yang tersimpan di perangkat.
+      </div>
+    </section>
+
+    {/* TENTANG */}
+    <section
+      style={{
+        background: COLORS.panel,
+        border: `1px solid ${COLORS.border}`,
+        borderRadius: 14,
+        padding: 14,
+        marginTop: 10,
+        marginBottom: 10,
+      }}
+    >
+      <div
+        style={{
+          fontSize: 14,
+          fontWeight: 800,
+          marginBottom: 10,
+        }}
+      >
+        Tentang Aplikasi
+      </div>
+
+      <div
+        style={{
+          color: COLORS.text,
+          fontSize: 11,
+          fontWeight: 700,
+        }}
+      >
+        Sales Tracker
+      </div>
+
+      <div
+        style={{
+          color: COLORS.muted,
+          fontSize: 9,
+          marginTop: 4,
+        }}
+      >
+        Monitoring Penawaran & Pencapaian
+      </div>
+
+      <div
+        style={{
+          color: COLORS.muted,
+          fontSize: 9,
+          marginTop: 8,
+        }}
+      >
+        Versi 1.0
+      </div>
+    </section>
+  </div>
+)}
 
       {/* =================================================
           BOTTOM NAV
