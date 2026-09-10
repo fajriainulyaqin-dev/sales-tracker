@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { loadState, saveState, resetState } from "./storage";
 
 const COLORS = {
@@ -1747,6 +1747,76 @@ function HistoryPage({
    APP
 ===================================================== */
 
+
+function downloadBackup(data) {
+  const backup = {
+    app: "Sales Tracker",
+    version: "1.0",
+    exportedAt: new Date().toISOString(),
+    data,
+  };
+
+  const blob = new Blob(
+    [JSON.stringify(backup, null, 2)],
+    { type: "application/json" }
+  );
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  const date = localDateString();
+
+  a.href = url;
+  a.download = `sales-tracker-backup-${date}.json`;
+
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+
+  URL.revokeObjectURL(url);
+}
+
+function readBackupFile(file, onSuccess) {
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    try {
+      const parsed = JSON.parse(reader.result);
+
+      let restoredData = parsed?.data;
+
+      // Support backup format that directly contains app state.
+      if (!restoredData && parsed?.history) {
+        restoredData = parsed;
+      }
+
+      if (
+        !restoredData ||
+        typeof restoredData !== "object"
+      ) {
+        throw new Error("Format backup tidak valid.");
+      }
+
+      if (!Array.isArray(restoredData.history)) {
+        throw new Error("Data riwayat tidak ditemukan.");
+      }
+
+      onSuccess(restoredData);
+    } catch (error) {
+      window.alert(
+        "Backup tidak valid atau file rusak.\n\nData yang sekarang tetap aman."
+      );
+    }
+  };
+
+  reader.onerror = () => {
+    window.alert(
+      "File backup tidak dapat dibaca.\n\nData yang sekarang tetap aman."
+    );
+  };
+
+  reader.readAsText(file);
+}
+
 export default function App() {
   const [state, setState] = useState(() =>
     loadState()
@@ -1766,6 +1836,8 @@ export default function App() {
 
   const [targetPeriod, setTargetPeriod] =
     useState("current");
+
+  const restoreInputRef = useRef(null);
 
   const currentMonthKey =
     getCurrentMonthKey();
@@ -2290,6 +2362,72 @@ export default function App() {
   }
 
   /* =====================================================
+     BACKUP & RESTORE
+  ===================================================== */
+
+  function handleBackup() {
+    try {
+      downloadBackup(state);
+      window.alert(
+        "Backup data berhasil dibuat."
+      );
+    } catch (error) {
+      window.alert(
+        "Gagal membuat backup data."
+      );
+    }
+  }
+
+  function handleRestoreClick() {
+    restoreInputRef.current?.click();
+  }
+
+  function handleRestoreFile(event) {
+    const file = event.target.files?.[0];
+
+    if (!file) return;
+
+    readBackupFile(file, (restoredData) => {
+      const confirmed = window.confirm(
+        "Restore data dari file ini?\n\n" +
+        "Data Sales Tracker yang sekarang akan " +
+        "digantikan oleh data backup."
+      );
+
+      if (!confirmed) {
+        event.target.value = "";
+        return;
+      }
+
+      try {
+        /*
+          Lewat saveState + loadState supaya normalisasi
+          dan aturan retensi 2 periode tetap berlaku.
+        */
+        saveState(restoredData);
+
+        const restored = loadState();
+
+        setState(restored);
+        setHistoryForm(emptyHistoryForm());
+        setEditingId(null);
+        setDashboardPeriod("current");
+        setTargetPeriod("current");
+
+        window.alert(
+          "Data berhasil direstore."
+        );
+      } catch (error) {
+        window.alert(
+          "Restore gagal.\n\nData yang sekarang tetap aman."
+        );
+      }
+
+      event.target.value = "";
+    });
+  }
+
+  /* =====================================================
      RESET
   ===================================================== */
 
@@ -2811,6 +2949,127 @@ export default function App() {
                   ini. Saat ini aplikasi belum
                   menggunakan database online.
                 </div>
+              </div>
+            </section>
+
+            {/* BACKUP & RESTORE */}
+
+            <section
+              style={{
+                background: COLORS.panel,
+                border:
+                  `1px solid ${COLORS.blue}45`,
+                borderRadius: 14,
+                padding: 14,
+                marginTop: 10,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 9,
+                  marginBottom: 12,
+                }}
+              >
+                <div
+                  style={{
+                    width: 34,
+                    height: 34,
+                    borderRadius: 10,
+                    background:
+                      `${COLORS.blue}18`,
+                    border:
+                      `1px solid ${COLORS.blue}35`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: COLORS.blue,
+                    fontSize: 18,
+                    flexShrink: 0,
+                  }}
+                >
+                  💾
+                </div>
+
+                <div>
+                  <div
+                    style={{
+                      fontSize: 14,
+                      fontWeight: 800,
+                    }}
+                  >
+                    Backup & Restore
+                  </div>
+
+                  <div
+                    style={{
+                      color: COLORS.muted,
+                      fontSize: 9,
+                      marginTop: 3,
+                    }}
+                  >
+                    Simpan atau kembalikan data aplikasi.
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={handleBackup}
+                style={{
+                  width: "100%",
+                  height: 44,
+                  borderRadius: 9,
+                  border:
+                    `1px solid ${COLORS.blue}55`,
+                  background:
+                    `${COLORS.blue}15`,
+                  color: COLORS.blue,
+                  fontSize: 11,
+                  fontWeight: 900,
+                }}
+              >
+                ↓ BACKUP DATA
+              </button>
+
+              <button
+                onClick={handleRestoreClick}
+                style={{
+                  width: "100%",
+                  height: 44,
+                  marginTop: 8,
+                  borderRadius: 9,
+                  border:
+                    `1px solid ${COLORS.purple}55`,
+                  background:
+                    `${COLORS.purple}15`,
+                  color: COLORS.purple,
+                  fontSize: 11,
+                  fontWeight: 900,
+                }}
+              >
+                ↑ RESTORE DATA
+              </button>
+
+              <input
+                ref={restoreInputRef}
+                type="file"
+                accept=".json,application/json"
+                onChange={handleRestoreFile}
+                style={{ display: "none" }}
+              />
+
+              <div
+                style={{
+                  color: COLORS.muted,
+                  fontSize: 8,
+                  lineHeight: 1.5,
+                  marginTop: 8,
+                }}
+              >
+                Backup menyimpan target dan riwayat
+                Sales Tracker dalam file .json.
+                Simpan file tersebut di tempat yang aman.
               </div>
             </section>
 
