@@ -874,7 +874,6 @@ function TargetPage({
         </div>
       </div>
 
-      {/* PERIODE TARGET */}
       <section
         style={{
           background: COLORS.panel,
@@ -983,9 +982,7 @@ function TargetPage({
           }}
         >
           Target yang sedang diedit:{" "}
-          <strong
-            style={{ color: COLORS.text }}
-          >
+          <strong style={{ color: COLORS.text }}>
             {monthLabel(selectedTargetMonth)}
           </strong>
         </div>
@@ -1017,11 +1014,7 @@ function TargetPage({
             label={row.label}
             value={row.target}
             onChange={(value) =>
-              updateRows(
-                "pwp",
-                index,
-                value
-              )
+              updateRows("pwp", index, value)
             }
           />
         ))}
@@ -1040,11 +1033,7 @@ function TargetPage({
             label={row.label}
             value={row.target}
             onChange={(value) =>
-              updateRows(
-                "psm",
-                index,
-                value
-              )
+              updateRows("psm", index, value)
             }
           />
         ))}
@@ -1063,11 +1052,7 @@ function TargetPage({
             label={row.label}
             value={row.target}
             onChange={(value) =>
-              updateRows(
-                "sg",
-                index,
-                value
-              )
+              updateRows("sg", index, value)
             }
           />
         ))}
@@ -1081,51 +1066,15 @@ function TargetPage({
 ===================================================== */
 
 const HISTORY_FIELDS = [
-  {
-    key: "apc",
-    label: "APC",
-    color: COLORS.blue,
-  },
-  {
-    key: "pwp1",
-    label: "PWP 1",
-    color: COLORS.purple,
-  },
-  {
-    key: "pwp2",
-    label: "PWP 2",
-    color: COLORS.purple,
-  },
-  {
-    key: "psm1",
-    label: "PSM 1",
-    color: COLORS.orange,
-  },
-  {
-    key: "psm2",
-    label: "PSM 2",
-    color: COLORS.orange,
-  },
-  {
-    key: "psm3",
-    label: "PSM 3",
-    color: COLORS.orange,
-  },
-  {
-    key: "psm4",
-    label: "PSM 4",
-    color: COLORS.orange,
-  },
-  {
-    key: "sg1",
-    label: "SG 1",
-    color: COLORS.yellow,
-  },
-  {
-    key: "sg2",
-    label: "SG 2",
-    color: COLORS.yellow,
-  },
+  { key: "apc", label: "APC", color: COLORS.blue },
+  { key: "pwp1", label: "PWP 1", color: COLORS.purple },
+  { key: "pwp2", label: "PWP 2", color: COLORS.purple },
+  { key: "psm1", label: "PSM 1", color: COLORS.orange },
+  { key: "psm2", label: "PSM 2", color: COLORS.orange },
+  { key: "psm3", label: "PSM 3", color: COLORS.orange },
+  { key: "psm4", label: "PSM 4", color: COLORS.orange },
+  { key: "sg1", label: "SG 1", color: COLORS.yellow },
+  { key: "sg2", label: "SG 2", color: COLORS.yellow },
 ];
 
 function emptyHistoryForm() {
@@ -1407,15 +1356,9 @@ function HistoryPage({
                 outline: "none",
               }}
             >
-              <option value="1">
-                Shift 1
-              </option>
-              <option value="2">
-                Shift 2
-              </option>
-              <option value="3">
-                Shift 3
-              </option>
+              <option value="1">Shift 1</option>
+              <option value="2">Shift 2</option>
+              <option value="3">Shift 3</option>
             </select>
           </div>
 
@@ -1855,11 +1798,6 @@ export default function App() {
       );
     }
 
-    /*
-      Fallback data lama.
-      Data lama akan dianggap sebagai target
-      bulan berjalan jika belum ada target bulanan.
-    */
     if (
       selectedTargetMonth ===
         currentMonthKey &&
@@ -1903,7 +1841,7 @@ export default function App() {
     : [];
 
   /* =====================================================
-     PERIODE DASHBOARD
+     DASHBOARD PERIODE
   ===================================================== */
 
   const selectedMonthKey =
@@ -1923,11 +1861,6 @@ export default function App() {
       );
     }
 
-    /*
-      Kompatibilitas data lama:
-      kalau dashboard sedang bulan berjalan,
-      gunakan target lama.
-    */
     if (
       selectedMonthKey === currentMonthKey &&
       state.penawaran
@@ -1954,7 +1887,7 @@ export default function App() {
   }, [history, selectedMonthKey]);
 
   /* =====================================================
-     HITUNG PENCAPAIAN PERIODE
+     HITUNG PENCAPAIAN
   ===================================================== */
 
   const periodAchievements = useMemo(() => {
@@ -1972,38 +1905,14 @@ export default function App() {
 
     dashboardHistory.forEach((item) => {
       totals.apc += Number(item.apc || 0);
-
-      totals.pwp1 += Number(
-        item.pwp1 || 0
-      );
-
-      totals.pwp2 += Number(
-        item.pwp2 || 0
-      );
-
-      totals.psm1 += Number(
-        item.psm1 || 0
-      );
-
-      totals.psm2 += Number(
-        item.psm2 || 0
-      );
-
-      totals.psm3 += Number(
-        item.psm3 || 0
-      );
-
-      totals.psm4 += Number(
-        item.psm4 || 0
-      );
-
-      totals.sg1 += Number(
-        item.sg1 || 0
-      );
-
-      totals.sg2 += Number(
-        item.sg2 || 0
-      );
+      totals.pwp1 += Number(item.pwp1 || 0);
+      totals.pwp2 += Number(item.pwp2 || 0);
+      totals.psm1 += Number(item.psm1 || 0);
+      totals.psm2 += Number(item.psm2 || 0);
+      totals.psm3 += Number(item.psm3 || 0);
+      totals.psm4 += Number(item.psm4 || 0);
+      totals.sg1 += Number(item.sg1 || 0);
+      totals.sg2 += Number(item.sg2 || 0);
     });
 
     return totals;
@@ -2127,20 +2036,9 @@ export default function App() {
           (apcAchievement * 25) / 100,
       },
 
-      pwp: calc(
-        dashboardPwp,
-        25
-      ),
-
-      psm: calc(
-        dashboardPsm,
-        20
-      ),
-
-      sg: calc(
-        dashboardSg,
-        30
-      ),
+      pwp: calc(dashboardPwp, 25),
+      psm: calc(dashboardPsm, 20),
+      sg: calc(dashboardSg, 30),
     };
   }, [
     dashboardApc,
@@ -2195,11 +2093,6 @@ export default function App() {
         },
       },
 
-      /*
-        Tetap simpan ke penawaran lama
-        jika yang diedit adalah bulan berjalan.
-        Ini menjaga kompatibilitas data lama.
-      */
       penawaran:
         selectedTargetMonth ===
         currentMonthKey
@@ -2274,16 +2167,12 @@ export default function App() {
 
   function saveHistory() {
     if (!historyForm.date) {
-      window.alert(
-        "Tanggal belum diisi."
-      );
+      window.alert("Tanggal belum diisi.");
       return;
     }
 
     if (!historyForm.cashier.trim()) {
-      window.alert(
-        "Nama kasir belum diisi."
-      );
+      window.alert("Nama kasir belum diisi.");
       return;
     }
 
@@ -2312,17 +2201,12 @@ export default function App() {
       ];
     }
 
-    const nextState = {
+    commit({
       ...state,
       history: nextHistory,
-    };
+    });
 
-    commit(nextState);
-
-    setHistoryForm(
-      emptyHistoryForm()
-    );
-
+    setHistoryForm(emptyHistoryForm());
     setEditingId(null);
 
     window.alert(
@@ -2348,41 +2232,15 @@ export default function App() {
       cashier:
         item.cashier || "",
 
-      apc: Number(
-        item.apc || 0
-      ),
-
-      pwp1: Number(
-        item.pwp1 || 0
-      ),
-
-      pwp2: Number(
-        item.pwp2 || 0
-      ),
-
-      psm1: Number(
-        item.psm1 || 0
-      ),
-
-      psm2: Number(
-        item.psm2 || 0
-      ),
-
-      psm3: Number(
-        item.psm3 || 0
-      ),
-
-      psm4: Number(
-        item.psm4 || 0
-      ),
-
-      sg1: Number(
-        item.sg1 || 0
-      ),
-
-      sg2: Number(
-        item.sg2 || 0
-      ),
+      apc: Number(item.apc || 0),
+      pwp1: Number(item.pwp1 || 0),
+      pwp2: Number(item.pwp2 || 0),
+      psm1: Number(item.psm1 || 0),
+      psm2: Number(item.psm2 || 0),
+      psm3: Number(item.psm3 || 0),
+      psm4: Number(item.psm4 || 0),
+      sg1: Number(item.sg1 || 0),
+      sg2: Number(item.sg2 || 0),
     });
 
     setEditingId(item.id);
@@ -2399,9 +2257,7 @@ export default function App() {
 
   function cancelEdit() {
     setEditingId(null);
-    setHistoryForm(
-      emptyHistoryForm()
-    );
+    setHistoryForm(emptyHistoryForm());
   }
 
   /* =====================================================
@@ -2429,10 +2285,7 @@ export default function App() {
 
     if (editingId === id) {
       setEditingId(null);
-
-      setHistoryForm(
-        emptyHistoryForm()
-      );
+      setHistoryForm(emptyHistoryForm());
     }
   }
 
@@ -2443,7 +2296,7 @@ export default function App() {
   function handleReset() {
     if (
       !window.confirm(
-        "Reset semua data Sales Tracker?"
+        "Reset semua data Sales Tracker?\n\nSemua target dan riwayat akan dihapus."
       )
     ) {
       return;
@@ -2452,12 +2305,14 @@ export default function App() {
     const fresh = resetState();
 
     setState(fresh);
-
-    setHistoryForm(
-      emptyHistoryForm()
-    );
-
+    setHistoryForm(emptyHistoryForm());
     setEditingId(null);
+    setDashboardPeriod("current");
+    setTargetPeriod("current");
+
+    window.alert(
+      "Semua data berhasil direset."
+    );
   }
 
   /* =====================================================
@@ -2477,6 +2332,7 @@ export default function App() {
       }}
     >
       {/* HEADER */}
+
       <header
         style={{
           padding: "18px 18px 12px",
@@ -2514,6 +2370,7 @@ export default function App() {
           boxSizing: "border-box",
         }}
       >
+
         {/* =================================================
             DASHBOARD
         ================================================= */}
@@ -2550,9 +2407,7 @@ export default function App() {
               >
                 <button
                   onClick={() =>
-                    setDashboardPeriod(
-                      "current"
-                    )
+                    setDashboardPeriod("current")
                   }
                   style={{
                     height: 40,
@@ -2594,9 +2449,7 @@ export default function App() {
 
                 <button
                   onClick={() =>
-                    setDashboardPeriod(
-                      "previous"
-                    )
+                    setDashboardPeriod("previous")
                   }
                   style={{
                     height: 40,
@@ -2732,9 +2585,7 @@ export default function App() {
               icon="◎"
               color={COLORS.blue}
             >
-              <ApcRow
-                data={dashboardApc}
-              />
+              <ApcRow data={dashboardApc} />
             </Section>
 
             <Section
@@ -2830,377 +2681,391 @@ export default function App() {
             SETTINGS
         ================================================= */}
 
-        {/* =================================================
-    SETTINGS
-================================================= */}
+        {activeTab === "settings" && (
+          <div>
+            <div
+              style={{
+                marginTop: 10,
+                marginBottom: 12,
+              }}
+            >
+              <div
+                style={{
+                  fontSize: 20,
+                  fontWeight: 900,
+                }}
+              >
+                Pengaturan
+              </div>
 
-{activeTab === "settings" && (
-  <div>
-    <div
-      style={{
-        marginTop: 10,
-        marginBottom: 12,
-      }}
-    >
-      <div
-        style={{
-          fontSize: 20,
-          fontWeight: 900,
-        }}
-      >
-        Pengaturan
-      </div>
+              <div
+                style={{
+                  color: COLORS.muted,
+                  fontSize: 10,
+                  marginTop: 4,
+                }}
+              >
+                Pengaturan aplikasi dan informasi
+                penyimpanan.
+              </div>
+            </div>
 
-      <div
-        style={{
-          color: COLORS.muted,
-          fontSize: 10,
-          marginTop: 4,
-        }}
-      >
-        Pengaturan aplikasi dan informasi penyimpanan.
-      </div>
-    </div>
+            {/* PENYIMPANAN */}
 
-    {/* PENYIMPANAN */}
-    <section
-      style={{
-        background: COLORS.panel,
-        border: `1px solid ${COLORS.blue}45`,
-        borderRadius: 14,
-        padding: 14,
-        marginTop: 10,
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 9,
-          marginBottom: 12,
-        }}
-      >
-        <div
-          style={{
-            width: 34,
-            height: 34,
-            borderRadius: 10,
-            background: `${COLORS.blue}18`,
-            border: `1px solid ${COLORS.blue}35`,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: COLORS.blue,
-            fontSize: 18,
-          }}
-        >
-          💾
-        </div>
+            <section
+              style={{
+                background: COLORS.panel,
+                border:
+                  `1px solid ${COLORS.blue}45`,
+                borderRadius: 14,
+                padding: 14,
+                marginTop: 10,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 9,
+                  marginBottom: 12,
+                }}
+              >
+                <div
+                  style={{
+                    width: 34,
+                    height: 34,
+                    borderRadius: 10,
+                    background: `${COLORS.blue}18`,
+                    border:
+                      `1px solid ${COLORS.blue}35`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: COLORS.blue,
+                    fontSize: 18,
+                  }}
+                >
+                  💾
+                </div>
 
-        <div>
-          <div
-            style={{
-              fontSize: 14,
-              fontWeight: 800,
-            }}
-          >
-            Penyimpanan Data
+                <div>
+                  <div
+                    style={{
+                      fontSize: 14,
+                      fontWeight: 800,
+                    }}
+                  >
+                    Penyimpanan Data
+                  </div>
+
+                  <div
+                    style={{
+                      color: COLORS.muted,
+                      fontSize: 9,
+                      marginTop: 3,
+                    }}
+                  >
+                    Data tersimpan secara lokal.
+                  </div>
+                </div>
+              </div>
+
+              <div
+                style={{
+                  background: "#0d1423",
+                  border:
+                    `1px solid ${COLORS.border}`,
+                  borderRadius: 10,
+                  padding: 11,
+                }}
+              >
+                <div
+                  style={{
+                    color: COLORS.muted,
+                    fontSize: 9,
+                  }}
+                >
+                  Metode Penyimpanan
+                </div>
+
+                <div
+                  style={{
+                    color: COLORS.text,
+                    fontSize: 12,
+                    fontWeight: 800,
+                    marginTop: 4,
+                  }}
+                >
+                  Local Storage
+                </div>
+
+                <div
+                  style={{
+                    color: COLORS.muted,
+                    fontSize: 9,
+                    lineHeight: 1.6,
+                    marginTop: 5,
+                  }}
+                >
+                  Data disimpan di perangkat/browser
+                  ini. Saat ini aplikasi belum
+                  menggunakan database online.
+                </div>
+              </div>
+            </section>
+
+            {/* RETENSI DATA */}
+
+            <section
+              style={{
+                background: COLORS.panel,
+                border:
+                  `1px solid ${COLORS.purple}45`,
+                borderRadius: 14,
+                padding: 14,
+                marginTop: 10,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 9,
+                  marginBottom: 12,
+                }}
+              >
+                <div
+                  style={{
+                    width: 34,
+                    height: 34,
+                    borderRadius: 10,
+                    background: `${COLORS.purple}18`,
+                    border:
+                      `1px solid ${COLORS.purple}35`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: COLORS.purple,
+                    fontSize: 18,
+                  }}
+                >
+                  🗓️
+                </div>
+
+                <div>
+                  <div
+                    style={{
+                      fontSize: 14,
+                      fontWeight: 800,
+                    }}
+                  >
+                    Retensi Data
+                  </div>
+
+                  <div
+                    style={{
+                      color: COLORS.muted,
+                      fontSize: 9,
+                      marginTop: 3,
+                    }}
+                  >
+                    Pengelolaan periode yang disimpan.
+                  </div>
+                </div>
+              </div>
+
+              <div
+                style={{
+                  background: "#0d1423",
+                  border:
+                    `1px solid ${COLORS.border}`,
+                  borderRadius: 10,
+                  padding: 11,
+                }}
+              >
+                <div
+                  style={{
+                    color: COLORS.muted,
+                    fontSize: 9,
+                  }}
+                >
+                  Periode yang dipertahankan
+                </div>
+
+                <div
+                  style={{
+                    color: COLORS.text,
+                    fontSize: 12,
+                    fontWeight: 800,
+                    marginTop: 4,
+                  }}
+                >
+                  2 Periode Terakhir
+                </div>
+
+                <div
+                  style={{
+                    color: COLORS.muted,
+                    fontSize: 9,
+                    lineHeight: 1.6,
+                    marginTop: 5,
+                  }}
+                >
+                  Bulan berjalan dan bulan sebelumnya.
+                  Data dari periode yang lebih lama
+                  akan dihapus otomatis.
+                </div>
+              </div>
+            </section>
+
+            {/* RESET DATA */}
+
+            <section
+              style={{
+                background: COLORS.panel,
+                border:
+                  `1px solid ${COLORS.red}45`,
+                borderRadius: 14,
+                padding: 14,
+                marginTop: 10,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 9,
+                  marginBottom: 12,
+                }}
+              >
+                <div
+                  style={{
+                    width: 34,
+                    height: 34,
+                    borderRadius: 10,
+                    background: `${COLORS.red}18`,
+                    border:
+                      `1px solid ${COLORS.red}35`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: COLORS.red,
+                    fontSize: 18,
+                  }}
+                >
+                  ⚠️
+                </div>
+
+                <div>
+                  <div
+                    style={{
+                      fontSize: 14,
+                      fontWeight: 800,
+                    }}
+                  >
+                    Reset Data
+                  </div>
+
+                  <div
+                    style={{
+                      color: COLORS.muted,
+                      fontSize: 9,
+                      marginTop: 3,
+                    }}
+                  >
+                    Hapus seluruh data aplikasi.
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={handleReset}
+                style={{
+                  width: "100%",
+                  height: 44,
+                  borderRadius: 9,
+                  border:
+                    `1px solid ${COLORS.red}55`,
+                  background:
+                    `${COLORS.red}15`,
+                  color: COLORS.red,
+                  fontSize: 11,
+                  fontWeight: 900,
+                }}
+              >
+                Reset Semua Data
+              </button>
+
+              <div
+                style={{
+                  color: COLORS.muted,
+                  fontSize: 8,
+                  lineHeight: 1.5,
+                  marginTop: 8,
+                }}
+              >
+                Tindakan ini akan menghapus seluruh
+                target dan riwayat yang tersimpan
+                di perangkat.
+              </div>
+            </section>
+
+            {/* TENTANG */}
+
+            <section
+              style={{
+                background: COLORS.panel,
+                border:
+                  `1px solid ${COLORS.border}`,
+                borderRadius: 14,
+                padding: 14,
+                marginTop: 10,
+                marginBottom: 10,
+              }}
+            >
+              <div
+                style={{
+                  fontSize: 14,
+                  fontWeight: 800,
+                  marginBottom: 10,
+                }}
+              >
+                Tentang Aplikasi
+              </div>
+
+              <div
+                style={{
+                  color: COLORS.text,
+                  fontSize: 11,
+                  fontWeight: 700,
+                }}
+              >
+                Sales Tracker
+              </div>
+
+              <div
+                style={{
+                  color: COLORS.muted,
+                  fontSize: 9,
+                  marginTop: 4,
+                }}
+              >
+                Monitoring Penawaran & Pencapaian
+              </div>
+
+              <div
+                style={{
+                  color: COLORS.muted,
+                  fontSize: 9,
+                  marginTop: 8,
+                }}
+              >
+                Versi 1.0
+              </div>
+            </section>
           </div>
-
-          <div
-            style={{
-              color: COLORS.muted,
-              fontSize: 9,
-              marginTop: 3,
-            }}
-          >
-            Data tersimpan secara lokal.
-          </div>
-        </div>
-      </div>
-
-      <div
-        style={{
-          background: "#0d1423",
-          border: `1px solid ${COLORS.border}`,
-          borderRadius: 10,
-          padding: 11,
-        }}
-      >
-        <div
-          style={{
-            color: COLORS.muted,
-            fontSize: 9,
-          }}
-        >
-          Metode Penyimpanan
-        </div>
-
-        <div
-          style={{
-            color: COLORS.text,
-            fontSize: 12,
-            fontWeight: 800,
-            marginTop: 4,
-          }}
-        >
-          Local Storage
-        </div>
-
-        <div
-          style={{
-            color: COLORS.muted,
-            fontSize: 9,
-            lineHeight: 1.6,
-            marginTop: 5,
-          }}
-        >
-          Data disimpan di perangkat/browser ini.
-          Saat ini aplikasi belum menggunakan database
-          online.
-        </div>
-      </div>
-    </section>
-
-    {/* RETENSI DATA */}
-    <section
-      style={{
-        background: COLORS.panel,
-        border: `1px solid ${COLORS.purple}45`,
-        borderRadius: 14,
-        padding: 14,
-        marginTop: 10,
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 9,
-          marginBottom: 12,
-        }}
-      >
-        <div
-          style={{
-            width: 34,
-            height: 34,
-            borderRadius: 10,
-            background: `${COLORS.purple}18`,
-            border: `1px solid ${COLORS.purple}35`,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: COLORS.purple,
-            fontSize: 18,
-          }}
-        >
-          🗓️
-        </div>
-
-        <div>
-          <div
-            style={{
-              fontSize: 14,
-              fontWeight: 800,
-            }}
-          >
-            Retensi Data
-          </div>
-
-          <div
-            style={{
-              color: COLORS.muted,
-              fontSize: 9,
-              marginTop: 3,
-            }}
-          >
-            Pengelolaan periode yang disimpan.
-          </div>
-        </div>
-      </div>
-
-      <div
-        style={{
-          background: "#0d1423",
-          border: `1px solid ${COLORS.border}`,
-          borderRadius: 10,
-          padding: 11,
-        }}
-      >
-        <div
-          style={{
-            color: COLORS.muted,
-            fontSize: 9,
-          }}
-        >
-          Periode yang dipertahankan
-        </div>
-
-        <div
-          style={{
-            color: COLORS.text,
-            fontSize: 12,
-            fontWeight: 800,
-            marginTop: 4,
-          }}
-        >
-          2 Periode Terakhir
-        </div>
-
-        <div
-          style={{
-            color: COLORS.muted,
-            fontSize: 9,
-            lineHeight: 1.6,
-            marginTop: 5,
-          }}
-        >
-          Bulan berjalan dan bulan sebelumnya.
-          Data dari periode yang lebih lama akan
-          dihapus otomatis.
-        </div>
-      </div>
-    </section>
-
-    {/* RESET DATA */}
-    <section
-      style={{
-        background: COLORS.panel,
-        border: `1px solid ${COLORS.red}45`,
-        borderRadius: 14,
-        padding: 14,
-        marginTop: 10,
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 9,
-          marginBottom: 12,
-        }}
-      >
-        <div
-          style={{
-            width: 34,
-            height: 34,
-            borderRadius: 10,
-            background: `${COLORS.red}18`,
-            border: `1px solid ${COLORS.red}35`,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: COLORS.red,
-            fontSize: 18,
-          }}
-        >
-          ⚠️
-        </div>
-
-        <div>
-          <div
-            style={{
-              fontSize: 14,
-              fontWeight: 800,
-            }}
-          >
-            Reset Data
-          </div>
-
-          <div
-            style={{
-              color: COLORS.muted,
-              fontSize: 9,
-              marginTop: 3,
-            }}
-          >
-            Hapus seluruh data aplikasi.
-          </div>
-        </div>
-      </div>
-
-      <button
-        onClick={handleReset}
-        style={{
-          width: "100%",
-          height: 44,
-          borderRadius: 9,
-          border: `1px solid ${COLORS.red}55`,
-          background: `${COLORS.red}15`,
-          color: COLORS.red,
-          fontSize: 11,
-          fontWeight: 900,
-        }}
-      >
-        Reset Semua Data
-      </button>
-
-      <div
-        style={{
-          color: COLORS.muted,
-          fontSize: 8,
-          lineHeight: 1.5,
-          marginTop: 8,
-        }}
-      >
-        Tindakan ini akan menghapus seluruh target
-        dan riwayat yang tersimpan di perangkat.
-      </div>
-    </section>
-
-    {/* TENTANG */}
-    <section
-      style={{
-        background: COLORS.panel,
-        border: `1px solid ${COLORS.border}`,
-        borderRadius: 14,
-        padding: 14,
-        marginTop: 10,
-        marginBottom: 10,
-      }}
-    >
-      <div
-        style={{
-          fontSize: 14,
-          fontWeight: 800,
-          marginBottom: 10,
-        }}
-      >
-        Tentang Aplikasi
-      </div>
-
-      <div
-        style={{
-          color: COLORS.text,
-          fontSize: 11,
-          fontWeight: 700,
-        }}
-      >
-        Sales Tracker
-      </div>
-
-      <div
-        style={{
-          color: COLORS.muted,
-          fontSize: 9,
-          marginTop: 4,
-        }}
-      >
-        Monitoring Penawaran & Pencapaian
-      </div>
-
-      <div
-        style={{
-          color: COLORS.muted,
-          fontSize: 9,
-          marginTop: 8,
-        }}
-      >
-        Versi 1.0
-      </div>
-    </section>
-  </div>
-)}
+        )}
+      </main>
 
       {/* =================================================
           BOTTOM NAV
