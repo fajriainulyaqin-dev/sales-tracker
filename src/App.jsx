@@ -688,6 +688,95 @@ function MiniKpi({
   );
 }
 
+function DirectSummary({ value }) {
+  const percentage = Number(value || 0);
+
+  return (
+    <section
+      style={{
+        background: COLORS.panel,
+        border: `1px solid ${COLORS.green}45`,
+        borderRadius: 14,
+        padding: 14,
+        marginTop: 12,
+      }}
+    >
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1.4fr 72px 72px 76px",
+          gap: 6,
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
+        <div
+          style={{
+            fontSize: 13,
+            fontWeight: 900,
+            lineHeight: 1.25,
+          }}
+        >
+          Penawaran Langsung
+          <div
+            style={{
+              color: COLORS.green,
+              fontSize: 9,
+              fontWeight: 800,
+              marginTop: 3,
+            }}
+          >
+            (%)
+          </div>
+        </div>
+
+        <div
+          style={{
+            textAlign: "center",
+            color: COLORS.muted,
+            fontSize: 8,
+          }}
+        >
+          100%
+        </div>
+
+        <div
+          style={{
+            textAlign: "center",
+            color: statusColor(percentage),
+            fontSize: 10,
+            fontWeight: 900,
+          }}
+        >
+          {percentage.toFixed(2)}%
+        </div>
+
+        <div
+          style={{
+            textAlign: "center",
+            color: statusColor(percentage),
+            fontSize: 10,
+            fontWeight: 900,
+          }}
+        >
+          {percentage.toFixed(2)}%
+        </div>
+      </div>
+
+      <div
+        style={{
+          color: COLORS.muted,
+          fontSize: 8,
+          marginTop: 8,
+          lineHeight: 1.5,
+        }}
+      >
+        Ringkasan APC 25% + PWP 25% + PSM 20% + SG 30%.
+      </div>
+    </section>
+  );
+}
+
 /* =====================================================
    TARGET
 ===================================================== */
@@ -2645,76 +2734,14 @@ export default function App() {
               </div>
             </section>
 
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns:
-                  "repeat(2,minmax(0,1fr))",
-                gap: 8,
-              }}
-            >
-              <MiniKpi
-                icon="◎"
-                title="APC"
-                weight={25}
-                achievement={
-                  kpi.apc.achievement
-                }
-                contribution={
-                  kpi.apc.contribution
-                }
-                color={COLORS.blue}
-              />
-
-              <MiniKpi
-                icon="🎁"
-                title="PWP"
-                weight={25}
-                achievement={
-                  kpi.pwp.achievement
-                }
-                contribution={
-                  kpi.pwp.contribution
-                }
-                color={COLORS.purple}
-              />
-
-              <MiniKpi
-                icon="♟"
-                title="PSM"
-                weight={20}
-                achievement={
-                  kpi.psm.achievement
-                }
-                contribution={
-                  kpi.psm.contribution
-                }
-                color={COLORS.orange}
-              />
-
-              <MiniKpi
-                icon="●"
-                title="SG"
-                weight={30}
-                achievement={
-                  kpi.sg.achievement
-                }
-                contribution={
-                  kpi.sg.contribution
-                }
-                color={COLORS.yellow}
-              />
-            </div>
-
-            <div
-              style={{
-                color: COLORS.muted,
-                fontSize: 9,
-                marginTop: 8,
-              }}
-            >
-              ⓘ Kontribusi = Pencapaian × Bobot
-            </div>
+            <DirectSummary
+              value={
+                kpi.apc.contribution +
+                kpi.pwp.contribution +
+                kpi.psm.contribution +
+                kpi.sg.contribution
+              }
+            />
 
             <Section
               number="1"
