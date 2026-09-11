@@ -531,7 +531,7 @@ function ApcRow({ data }) {
             fontWeight: 800,
           }}
         >
-          {fmt(data.target)}
+          Rp{fmt(data.target)}
         </div>
 
         <div
@@ -542,7 +542,7 @@ function ApcRow({ data }) {
             fontWeight: 800,
           }}
         >
-          {fmt(data.achieved)}
+          Rp{fmt(data.achieved)}
         </div>
 
         <div
@@ -587,159 +587,109 @@ function Section({
 }) {
   const sectionColor = performanceColor(achievement);
   const gapToTf = Number(achievement || 0) - Number(timeFactor || 0);
+  const tfColor = gapToTf >= 0 ? COLORS.green : COLORS.red;
 
   return (
     <section
       style={{
-        background: `radial-gradient(circle at 100% 0%, ${sectionColor}16 0%, transparent 42%), ${COLORS.panel}`,
-        border: `1px solid ${sectionColor}85`,
+        background: `radial-gradient(circle at 100% 0%, ${sectionColor}13 0%, transparent 46%), ${COLORS.panel}`,
+        border: `1px solid ${sectionColor}88`,
         borderRadius: 16,
-        padding: 14,
-        marginTop: 14,
-        position: "relative",
-        boxSizing: "border-box",
-        boxShadow: `0 0 16px ${sectionColor}0f`,
+        padding: 12,
+        marginTop: 12,
+        boxShadow: `0 8px 22px ${sectionColor}0b`,
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
-        <div
-          style={{
-            width: 34,
-            height: 34,
-            borderRadius: 10,
-            background: `${sectionColor}20`,
-            border: `1px solid ${sectionColor}45`,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: sectionColor,
-            fontSize: 18,
-            flexShrink: 0,
-          }}
-        >{icon}</div>
-        <div style={{ minWidth: 0, flex: 1 }}>
-          <div style={{ fontSize: 13, fontWeight: 900, color: sectionColor }}>
-            {number}. {title} ({weight}%)
-          </div>
-          {badge && (
-            <div style={{ display: "inline-block", marginTop: 5, padding: "3px 8px", borderRadius: 999, background: `${sectionColor}20`, color: sectionColor, fontSize: 8, fontWeight: 800 }}>
-              {badge}
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1.5fr) minmax(205px,.9fr)", gap: 12, alignItems: "stretch" }}>
+        <div style={{ minWidth: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ width: 34, height: 34, borderRadius: 11, background: `${sectionColor}20`, border: `1px solid ${sectionColor}45`, display: "grid", placeItems: "center", color: sectionColor, fontSize: 17, flexShrink: 0 }}>{icon}</div>
+            <div style={{ minWidth: 0, flex: 1 }}>
+              <div style={{ color: sectionColor, fontSize: 13, fontWeight: 950 }}>{number}. {title} ({weight}%)</div>
+              {badge && <div style={{ display: "inline-block", marginTop: 4, padding: "3px 8px", borderRadius: 999, background: `${sectionColor}20`, color: sectionColor, fontSize: 7, fontWeight: 900 }}>{badge}</div>}
             </div>
-          )}
-        </div>
-        <div style={{ color: sectionColor, fontSize: 14, fontWeight: 900, whiteSpace: "nowrap" }}>
-          {fmtPct(achievement)}
-        </div>
-      </div>
-
-      <div
-        style={{
-          marginTop: 12,
-          paddingTop: 12,
-          borderTop: `1px solid ${sectionColor}35`,
-        }}
-      >
-        {children}
-      </div>
-
-      <div
-        style={{
-          marginTop: 12,
-          padding: "10px 9px 9px",
-          borderRadius: 11,
-          background: COLORS.subpanel,
-          border: `1px solid ${COLORS.border}`,
-        }}
-      >
-        <div
-          style={{
-            color: COLORS.muted,
-            fontSize: 8,
-            fontWeight: 800,
-            letterSpacing: ".04em",
-            marginBottom: 7,
-            textTransform: "uppercase",
-          }}
-        >
-          Monitoring Performa
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 7 }}>
-        <div style={{ background: COLORS.subpanel, border: `1px solid ${COLORS.border}`, borderRadius: 9, padding: "8px 9px" }}>
-          <div style={{ color: COLORS.muted, fontSize: 8 }}>Gap to Target</div>
-          <div style={{ color: gap > 0 ? COLORS.green : gap < 0 ? COLORS.red : COLORS.text, fontSize: 11, fontWeight: 900, marginTop: 3 }}>
-            {gap > 0 ? "+" : ""}{fmtGapNumber(gap)}
+            <div style={{ color: sectionColor, fontSize: 14, fontWeight: 950, whiteSpace: "nowrap", padding: "4px 8px", borderRadius: 999, border: `1px solid ${sectionColor}55`, background: `${sectionColor}0c` }}>{fmtPct(achievement)}</div>
+          </div>
+          <div style={{ marginTop: 9, paddingTop: 9, borderTop: `1px solid ${COLORS.border}` }}>{children}</div>
+          <div style={{ marginTop: 9, padding: "7px 9px", borderRadius: 10, border: `1px solid ${tfColor}65`, background: `${tfColor}09`, display: "flex", justifyContent: "space-between", gap: 8, alignItems: "center" }}>
+            <div>
+              <div style={{ color: COLORS.muted, fontSize: 7 }}>Gap to TF</div>
+              <div style={{ color: tfColor, fontSize: 10, fontWeight: 950, marginTop: 2 }}>{gapToTf >= 0 ? "+" : ""}{fmtPct(gapToTf)}</div>
+            </div>
+            <div style={{ color: tfColor, fontSize: 7, fontWeight: 900, textAlign: "right" }}>{gapToTf >= 0 ? "Di atas Time Factor" : "Di bawah Time Factor"}</div>
           </div>
         </div>
-        <div style={{ background: COLORS.subpanel, border: `1px solid ${COLORS.border}`, borderRadius: 9, padding: "8px 9px" }}>
-          <div style={{ color: COLORS.muted, fontSize: 8 }}>Sisa Hari</div>
-          <div style={{ color: COLORS.text, fontSize: 11, fontWeight: 900, marginTop: 3 }}>{remainingDays} hari</div>
-        </div>
-        <div style={{ background: COLORS.subpanel, border: `1px solid ${COLORS.border}`, borderRadius: 9, padding: "8px 9px" }}>
-          <div style={{ color: COLORS.muted, fontSize: 8 }}>Target / Hari</div>
-          <div style={{ color: sectionColor, fontSize: 11, fontWeight: 900, marginTop: 3 }}>{fmtGapNumber(targetPerDay)}</div>
-        </div>
-        <div style={{ background: COLORS.subpanel, border: `1px solid ${COLORS.border}`, borderRadius: 9, padding: "8px 9px" }}>
-          <div style={{ color: COLORS.muted, fontSize: 8 }}>Time Factor</div>
-          <div style={{ color: gapToTf >= 0 ? COLORS.green : COLORS.red, fontSize: 11, fontWeight: 900, marginTop: 3 }}>{fmtPct(timeFactor)}</div>
-        </div>
-        </div>
-      </div>
 
-      <div style={{ marginTop: 8, background: COLORS.subpanel, border: `1px solid ${gapToTf >= 0 ? COLORS.green : COLORS.red}55`, borderRadius: 9, padding: "8px 9px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 }}>
-        <div>
-          <div style={{ color: COLORS.muted, fontSize: 8 }}>Gap to TF</div>
-          <div style={{ color: gapToTf >= 0 ? COLORS.green : COLORS.red, fontSize: 11, fontWeight: 900, marginTop: 3 }}>{gapToTf >= 0 ? "+" : ""}{fmtPct(gapToTf)}</div>
+        <div style={{ borderLeft: `1px solid ${COLORS.border}`, paddingLeft: 12, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+          <div style={{ color: COLORS.blue, fontSize: 9, fontWeight: 900, marginBottom: 7 }}>▥ &nbsp; Monitoring Performa</div>
+          <div style={{ border: `1px solid ${COLORS.border}`, borderRadius: 11, overflow: "hidden", background: `${COLORS.subpanel}90` }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
+              <div style={{ padding: "8px 9px", borderRight: `1px solid ${COLORS.border}`, borderBottom: `1px solid ${COLORS.border}` }}>
+                <div style={{ color: COLORS.muted, fontSize: 7 }}>Gap to Target</div>
+                <div style={{ color: gap > 0 ? COLORS.green : gap < 0 ? COLORS.red : COLORS.text, fontSize: 11, fontWeight: 950, marginTop: 3 }}>{gap > 0 ? "+" : ""}{fmtGapNumber(gap)}</div>
+              </div>
+              <div style={{ padding: "8px 9px", borderBottom: `1px solid ${COLORS.border}` }}>
+                <div style={{ color: COLORS.muted, fontSize: 7 }}>Sisa Hari</div>
+                <div style={{ color: COLORS.text, fontSize: 11, fontWeight: 950, marginTop: 3 }}>{remainingDays} hari</div>
+              </div>
+              <div style={{ padding: "8px 9px", borderRight: `1px solid ${COLORS.border}` }}>
+                <div style={{ color: COLORS.muted, fontSize: 7 }}>Target / Hari</div>
+                <div style={{ color: COLORS.text, fontSize: 11, fontWeight: 950, marginTop: 3 }}>{fmtGapNumber(targetPerDay)}</div>
+              </div>
+              <div style={{ padding: "8px 9px" }}>
+                <div style={{ color: COLORS.muted, fontSize: 7 }}>Time Factor</div>
+                <div style={{ color: tfColor, fontSize: 11, fontWeight: 950, marginTop: 3 }}>{fmtPct(timeFactor)}</div>
+              </div>
+            </div>
+          </div>
+          <div style={{ color: COLORS.muted, fontSize: 7, marginTop: 8 }}>ⓘ Bobot: {weight}% dari total Penawaran Langsung</div>
         </div>
-        <div style={{ color: gapToTf >= 0 ? COLORS.green : COLORS.red, fontSize: 8, fontWeight: 800, textAlign: "right" }}>
-          {gapToTf >= 0 ? "Di atas Time Factor" : "Di bawah Time Factor"}
-        </div>
-      </div>
-
-      <div style={{ marginTop: 10, color: COLORS.muted, fontSize: 9 }}>
-        ⓘ Bobot: {weight}% dari total Penawaran Langsung
       </div>
     </section>
   );
 }
 
 function PerformanceCards({ pwp, psm, sg }) {
-  const card = (label, stat, baseColor) => {
+  const card = (label, stat, baseColor, icon, subtitle) => {
     const achievement = Number(stat?.achievement || 0);
     const accent = performanceColor(achievement);
     const gap = Number(stat?.gap || 0);
     const targetPerDay = Number(stat?.targetPerDay || 0);
     return (
-      <div style={{ background: `radial-gradient(circle at 100% 0%, ${accent}18 0%, transparent 60%), ${COLORS.panel}`, border: `1px solid ${accent}99`, borderRadius: 11, padding: "10px 10px 9px", boxShadow: `inset 0 1px 0 ${accent}18, 0 0 14px ${accent}10` }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 6, color: baseColor, fontSize: 12, fontWeight: 900 }}>
-          {label}<span style={{ marginLeft: "auto", color: COLORS.muted, fontSize: 14 }}>›</span>
+      <div
+        style={{
+          background: `radial-gradient(circle at 100% 0%, ${accent}15 0%, transparent 62%), ${COLORS.panel}`,
+          border: `1px solid ${accent}90`,
+          borderRadius: 14,
+          padding: 11,
+          boxShadow: `0 7px 18px ${accent}0b`,
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <div style={{ width: 32, height: 32, borderRadius: 10, background: `${baseColor}20`, border: `1px solid ${baseColor}45`, display: "grid", placeItems: "center", color: baseColor, fontSize: 16 }}>{icon}</div>
+          <div style={{ color: baseColor, fontSize: 12, fontWeight: 950 }}>{label}</div>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) 1px minmax(0,1fr)", gap: 8, marginTop: 9 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1px 1fr", gap: 9, marginTop: 9 }}>
           <div>
             <div style={{ color: COLORS.muted, fontSize: 8 }}>Gap</div>
-            <div style={{ color: gap >= 0 ? COLORS.green : COLORS.red, fontSize: 14, fontWeight: 900, marginTop: 4, whiteSpace: "nowrap" }}>{gap > 0 ? "+" : ""}{fmtGapNumber(gap)}</div>
+            <div style={{ color: gap >= 0 ? COLORS.green : COLORS.red, fontSize: 14, fontWeight: 950, marginTop: 3 }}>{gap > 0 ? "+" : ""}{fmtGapNumber(gap)}</div>
           </div>
-          <div style={{ width: 1, background: COLORS.border }} />
+          <div style={{ background: COLORS.border }} />
           <div>
             <div style={{ color: COLORS.muted, fontSize: 8 }}>Target / Hari</div>
-            <div style={{ color: accent, fontSize: 14, fontWeight: 900, marginTop: 4, whiteSpace: "nowrap" }}>{targetPerDay > 0 ? "+" : ""}{fmtGapNumber(targetPerDay)}</div>
+            <div style={{ color: targetPerDay > 0 ? accent : COLORS.green, fontSize: 14, fontWeight: 950, marginTop: 3 }}>{targetPerDay > 0 ? "+" : ""}{fmtGapNumber(targetPerDay)}</div>
             <div style={{ color: COLORS.muted, fontSize: 7, marginTop: 2 }}>unit / hari</div>
           </div>
         </div>
+        <div style={{ color: COLORS.muted, fontSize: 7, marginTop: 8 }}>{subtitle}</div>
       </div>
     );
   };
   return (
-    <div
-      style={{
-        marginTop: 12,
-        display: "grid",
-        gridTemplateColumns: "repeat(3,minmax(0,1fr))",
-        gap: 8,
-      }}
-    >
-      {card("PWP", pwp, COLORS.purple)}
-      {card("PSM", psm, COLORS.orange)}
-      {card("Serba Gratis", sg, COLORS.yellow)}
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(3,minmax(0,1fr))", gap: 9, marginBottom: 12 }}>
+      {card("PWP", pwp, COLORS.purple, "🎁", "Akumulasi PWP 1 + PWP 2")}
+      {card("PSM", psm, COLORS.orange, "♟", "Akumulasi PSM 1 + PSM 2 + PSM 3 + PSM 4")}
+      {card("Serba Gratis", sg, COLORS.yellow, "●", "Akumulasi SG 1 + SG 2")}
     </div>
   );
 }
@@ -863,90 +813,111 @@ function MiniKpi({
   );
 }
 
-function DirectSummary({ value }) {
-  const percentage = Number(value || 0);
+function DashboardOverview({
+  dashboardPeriod,
+  setDashboardPeriod,
+  currentMonthKey,
+  previousMonthKey,
+  selectedMonthKey,
+  percentage,
+}) {
+  const accent = performanceColor(percentage);
 
   return (
     <section
       style={{
-        background: COLORS.panel,
-        border: `1px solid ${COLORS.green}45`,
-        borderRadius: 14,
+        background: `radial-gradient(circle at 100% 0%, ${accent}12 0%, transparent 42%), ${COLORS.panel}`,
+        border: `1px solid ${accent}65`,
+        borderRadius: 16,
         padding: 14,
-        marginTop: 12,
+        marginBottom: 12,
+        boxShadow: `0 8px 24px ${accent}0a`,
       }}
     >
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "1.4fr 72px 72px 76px",
-          gap: 6,
-          alignItems: "center",
-          width: "100%",
+          gridTemplateColumns: "minmax(0,1.25fr) minmax(0,1fr)",
+          gap: 14,
+          alignItems: "stretch",
         }}
       >
-        <div
-          style={{
-            fontSize: 13,
-            fontWeight: 900,
-            lineHeight: 1.25,
-          }}
-        >
-          Penawaran Langsung
-          <div
-            style={{
-              color: COLORS.green,
-              fontSize: 9,
-              fontWeight: 800,
-              marginTop: 3,
-            }}
-          >
-            (%)
+        <div>
+          <div style={{ fontSize: 12, fontWeight: 900, marginBottom: 8 }}>
+            Periode Dashboard
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 8 }}>
+            <button
+              onClick={() => setDashboardPeriod("current")}
+              style={{
+                minHeight: 48,
+                borderRadius: 10,
+                border: `1px solid ${dashboardPeriod === "current" ? COLORS.blue : COLORS.border}`,
+                background: dashboardPeriod === "current" ? `${COLORS.blue}18` : COLORS.subpanel,
+                color: dashboardPeriod === "current" ? COLORS.blue : COLORS.muted,
+                fontSize: 10,
+                fontWeight: 900,
+              }}
+            >
+              Periode Berjalan
+              <div style={{ fontSize: 8, marginTop: 3 }}>{monthLabel(currentMonthKey)}</div>
+            </button>
+            <button
+              onClick={() => setDashboardPeriod("previous")}
+              style={{
+                minHeight: 48,
+                borderRadius: 10,
+                border: `1px solid ${dashboardPeriod === "previous" ? COLORS.purple : COLORS.border}`,
+                background: dashboardPeriod === "previous" ? `${COLORS.purple}18` : COLORS.subpanel,
+                color: dashboardPeriod === "previous" ? COLORS.purple : COLORS.muted,
+                fontSize: 10,
+                fontWeight: 900,
+              }}
+            >
+              Bulan Lalu
+              <div style={{ fontSize: 8, marginTop: 3 }}>{monthLabel(previousMonthKey)}</div>
+            </button>
+          </div>
+          <div style={{ color: COLORS.muted, fontSize: 8, marginTop: 8, lineHeight: 1.5 }}>
+            Menampilkan pencapaian {monthLabel(selectedMonthKey)}. Target mengikuti target bulan tersebut.
           </div>
         </div>
 
         <div
           style={{
-            textAlign: "center",
-            color: COLORS.muted,
-            fontSize: 8,
+            borderLeft: `1px solid ${COLORS.border}`,
+            paddingLeft: 14,
+            display: "grid",
+            gridTemplateColumns: "minmax(0,1fr) 76px",
+            gap: 10,
+            alignItems: "center",
           }}
         >
-          100%
+          <div>
+            <div style={{ color: COLORS.muted, fontSize: 8, fontWeight: 800 }}>PENAWARAN LANGSUNG (%)</div>
+            <div style={{ color: accent, fontSize: 30, lineHeight: 1, fontWeight: 950, marginTop: 6 }}>{fmtPct(percentage)}</div>
+            <div style={{ color: COLORS.muted, fontSize: 9, marginTop: 5 }}>Total Pencapaian</div>
+            <div style={{ color: COLORS.text, fontSize: 9, marginTop: 8 }}>Total Bobot <strong>100%</strong></div>
+            <div style={{ color: COLORS.muted, fontSize: 9, marginTop: 3 }}>Total Kontribusi <strong style={{ color: accent }}>{fmtPct(percentage)}</strong></div>
+          </div>
+          <div style={{ textAlign: "center" }}>
+            <div
+              style={{
+                width: 66,
+                height: 66,
+                borderRadius: "50%",
+                background: `conic-gradient(${accent} ${Math.min(percentage,100)}%, ${COLORS.border} 0)`,
+                display: "grid",
+                placeItems: "center",
+                margin: "0 auto",
+                boxShadow: `0 0 18px ${accent}25`,
+              }}
+            >
+              <div style={{ width: 50, height: 50, borderRadius: "50%", background: COLORS.panel, display: "grid", placeItems: "center", fontSize: 9, fontWeight: 900 }}>{fmtPct(percentage)}</div>
+            </div>
+            <div style={{ color: COLORS.muted, fontSize: 7, marginTop: 5 }}>Pencapaian Akhir</div>
+          </div>
         </div>
-
-        <div
-          style={{
-            textAlign: "center",
-            color: statusColor(percentage),
-            fontSize: 10,
-            fontWeight: 900,
-          }}
-        >
-          {fmtPct(percentage)}
-        </div>
-
-        <div
-          style={{
-            textAlign: "center",
-            color: statusColor(percentage),
-            fontSize: 10,
-            fontWeight: 900,
-          }}
-        >
-          {fmtPct(percentage)}
-        </div>
-      </div>
-
-      <div
-        style={{
-          color: COLORS.muted,
-          fontSize: 8,
-          marginTop: 8,
-          lineHeight: 1.5,
-        }}
-      >
-        Ringkasan APC 25% + PWP 25% + PSM 20% + SG 30%.
       </div>
     </section>
   );
@@ -2876,138 +2847,13 @@ export default function App() {
 
         {activeTab === "dashboard" && (
           <>
-            <section
-              style={{
-                background: COLORS.panel,
-                border:
-                  `1px solid ${COLORS.border}`,
-                borderRadius: 14,
-                padding: 12,
-                marginBottom: 10,
-              }}
-            >
-              <div
-                style={{
-                  fontSize: 12,
-                  fontWeight: 800,
-                  marginBottom: 8,
-                }}
-              >
-                Periode Dashboard
-              </div>
-
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns:
-                    "repeat(2,minmax(0,1fr))",
-                  gap: 8,
-                }}
-              >
-                <button
-                  onClick={() =>
-                    setDashboardPeriod("current")
-                  }
-                  style={{
-                    height: 40,
-                    borderRadius: 9,
-                    border:
-                      `1px solid ${
-                        dashboardPeriod ===
-                        "current"
-                          ? COLORS.blue
-                          : COLORS.border
-                      }`,
-                    background:
-                      dashboardPeriod ===
-                      "current"
-                        ? `${COLORS.blue}18`
-                        : "#0b1221",
-                    color:
-                      dashboardPeriod ===
-                      "current"
-                        ? COLORS.blue
-                        : COLORS.muted,
-                    fontSize: 10,
-                    fontWeight: 800,
-                  }}
-                >
-                  Periode Berjalan
-
-                  <div
-                    style={{
-                      fontSize: 8,
-                      marginTop: 2,
-                    }}
-                  >
-                    {monthLabel(
-                      currentMonthKey
-                    )}
-                  </div>
-                </button>
-
-                <button
-                  onClick={() =>
-                    setDashboardPeriod("previous")
-                  }
-                  style={{
-                    height: 40,
-                    borderRadius: 9,
-                    border:
-                      `1px solid ${
-                        dashboardPeriod ===
-                        "previous"
-                          ? COLORS.purple
-                          : COLORS.border
-                      }`,
-                    background:
-                      dashboardPeriod ===
-                      "previous"
-                        ? `${COLORS.purple}18`
-                        : "#0b1221",
-                    color:
-                      dashboardPeriod ===
-                      "previous"
-                        ? COLORS.purple
-                        : COLORS.muted,
-                    fontSize: 10,
-                    fontWeight: 800,
-                  }}
-                >
-                  Bulan Lalu
-
-                  <div
-                    style={{
-                      fontSize: 8,
-                      marginTop: 2,
-                    }}
-                  >
-                    {monthLabel(
-                      previousMonthKey
-                    )}
-                  </div>
-                </button>
-              </div>
-
-              <div
-                style={{
-                  color: COLORS.muted,
-                  fontSize: 8,
-                  marginTop: 8,
-                  lineHeight: 1.5,
-                }}
-              >
-                Menampilkan pencapaian{" "}
-                {monthLabel(
-                  selectedMonthKey
-                )}
-                . Target mengikuti target
-                bulan tersebut.
-              </div>
-            </section>
-
-            <DirectSummary
-              value={
+            <DashboardOverview
+              dashboardPeriod={dashboardPeriod}
+              setDashboardPeriod={setDashboardPeriod}
+              currentMonthKey={currentMonthKey}
+              previousMonthKey={previousMonthKey}
+              selectedMonthKey={selectedMonthKey}
+              percentage={
                 kpi.apc.contribution +
                 kpi.pwp.contribution +
                 kpi.psm.contribution +
