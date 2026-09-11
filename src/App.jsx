@@ -635,11 +635,8 @@ function Section({
       <div
         style={{
           marginTop: 12,
-          padding: "10px 9px 8px",
-          borderRadius: 11,
-          background: COLORS.subpanel,
-          border: `1px solid ${COLORS.border}`,
-          boxShadow: "inset 0 1px 0 rgba(255,255,255,.025)",
+          paddingTop: 12,
+          borderTop: `1px solid ${sectionColor}35`,
         }}
       >
         {children}
@@ -735,24 +732,14 @@ function PerformanceCards({ pwp, psm, sg }) {
     <div
       style={{
         marginTop: 12,
-        padding: 9,
-        borderRadius: 14,
-        background: COLORS.panel,
-        border: `1px solid ${COLORS.border}`,
-        boxShadow: `0 6px 18px rgba(0,0,0,.14)`,
+        display: "grid",
+        gridTemplateColumns: "repeat(3,minmax(0,1fr))",
+        gap: 8,
       }}
     >
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(3,minmax(0,1fr))",
-          gap: 8,
-        }}
-      >
-        {card("PWP", pwp, COLORS.purple)}
-        {card("PSM", psm, COLORS.orange)}
-        {card("Serba Gratis", sg, COLORS.yellow)}
-      </div>
+      {card("PWP", pwp, COLORS.purple)}
+      {card("PSM", psm, COLORS.orange)}
+      {card("Serba Gratis", sg, COLORS.yellow)}
     </div>
   );
 }
