@@ -2797,6 +2797,7 @@ export default function App() {
           "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
         paddingBottom: 82,
         overflowX: "hidden",
+        transition: "background 180ms ease, color 180ms ease",
       }}
     >
       {/* HEADER */}
@@ -2816,7 +2817,7 @@ export default function App() {
               try { localStorage.setItem("sales-tracker-theme", next); } catch {}
             }}
             aria-label="Ganti mode tampilan"
-            style={{ width: 42, height: 34, borderRadius: 10, border: `1px solid ${COLORS.border}`, background: COLORS.panel, color: COLORS.text, fontSize: 17, cursor: "pointer", flexShrink: 0 }}
+            style={{ width: 42, height: 34, borderRadius: 10, border: `1px solid ${COLORS.border}`, background: COLORS.panel, color: COLORS.text, fontSize: 17, cursor: "pointer", flexShrink: 0, boxShadow: `0 2px 10px ${COLORS.border}55` }}
           >{theme === "dark" ? "☀️" : "🌙"}</button>
         </div>
       </header>
@@ -2989,7 +2990,6 @@ export default function App() {
               weight={25}
               icon="◎"
               achievement={sectionStats.apc.achievement}
-              }
               gap={sectionStats.apc.gap}
               remainingDays={dashboardRemainingDays}
               targetPerDay={sectionStats.apc.targetPerDay}
@@ -3006,7 +3006,6 @@ export default function App() {
               badge="Akumulasi PWP 1 + PWP 2"
               icon="🎁"
               achievement={sectionStats.pwp.achievement}
-              }
               gap={sectionStats.pwp.gap}
               remainingDays={dashboardRemainingDays}
               targetPerDay={sectionStats.pwp.targetPerDay}
@@ -3026,7 +3025,6 @@ export default function App() {
               badge="Akumulasi PSM 1 + PSM 2 + PSM 3 + PSM 4"
               icon="♟"
               achievement={sectionStats.psm.achievement}
-              }
               gap={sectionStats.psm.gap}
               remainingDays={dashboardRemainingDays}
               targetPerDay={sectionStats.psm.targetPerDay}
@@ -3046,7 +3044,6 @@ export default function App() {
               badge="Akumulasi SG 1 + SG 2"
               icon="●"
               achievement={sectionStats.sg.achievement}
-              }
               gap={sectionStats.sg.gap}
               remainingDays={dashboardRemainingDays}
               targetPerDay={sectionStats.sg.targetPerDay}
