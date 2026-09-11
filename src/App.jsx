@@ -32,6 +32,30 @@ function statusColor(value) {
   return COLORS.red;
 }
 
+function performanceColor(value) {
+  const v = Math.max(0, Math.min(120, Number(value || 0)));
+  const stops = [
+    [0, [255, 95, 109]],
+    [70, [255, 110, 75]],
+    [85, [255, 154, 69]],
+    [95, [229, 200, 75]],
+    [100, [85, 229, 111]],
+    [120, [40, 210, 150]],
+  ];
+
+  for (let i = 1; i < stops.length; i += 1) {
+    if (v <= stops[i][0]) {
+      const [a, ca] = stops[i - 1];
+      const [b, cb] = stops[i];
+      const t = (v - a) / (b - a);
+      const rgb = ca.map((c, index) => Math.round(c + (cb[index] - c) * t));
+      return `rgb(${rgb.join(', ')})`;
+    }
+  }
+
+  return 'rgb(40, 210, 150)';
+}
+
 function fmtPct(value) {
   return `${Number(value || 0).toFixed(1).replace('.', ',')}%`;
 }
@@ -535,47 +559,30 @@ function Section({
   weight,
   badge,
   icon,
-  color,
   achievement,
-  open,
-  onToggle,
   children,
-  gap,
-  remainingDays,
-  targetPerDay,
-  timeFactor,
 }) {
-  const gapToTf = Number(achievement || 0) - Number(timeFactor || 0);
-  const performanceColor = statusColor(achievement);
+  const sectionColor = performanceColor(achievement);
 
   return (
     <section
       style={{
-        background: COLORS.panel,
-        border: `1px solid ${performanceColor}55`,
+        background:
+          `radial-gradient(circle at 100% 0%, ${sectionColor}18 0%, transparent 42%), ${COLORS.panel}`,
+        border: `1px solid ${sectionColor}88`,
         borderRadius: 14,
-        padding: 0,
+        padding: 14,
         marginTop: 14,
         boxSizing: "border-box",
         overflow: "hidden",
+        boxShadow: `0 0 18px ${sectionColor}12`,
       }}
     >
-      <button
-        type="button"
-        onClick={onToggle}
-        aria-expanded={open}
-        aria-controls={`section-${id}`}
+      <div
         style={{
-          width: "100%",
-          border: "none",
-          background: "transparent",
-          color: COLORS.text,
-          padding: "13px 14px",
           display: "flex",
           alignItems: "center",
           gap: 9,
-          textAlign: "left",
-          cursor: "pointer",
         }}
       >
         <div
@@ -583,12 +590,12 @@ function Section({
             width: 34,
             height: 34,
             borderRadius: 10,
-            background: `${performanceColor}18`,
-            border: `1px solid ${performanceColor}35`,
+            background: `${sectionColor}20`,
+            border: `1px solid ${sectionColor}45`,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: performanceColor,
+            color: sectionColor,
             fontSize: 18,
             flexShrink: 0,
           }}
@@ -604,196 +611,126 @@ function Section({
               whiteSpace: "nowrap",
               overflow: "hidden",
               textOverflow: "ellipsis",
+              color: sectionColor,
             }}
           >
-            <span style={{ color: performanceColor }}>{title}</span>
+            {number}. {title} ({weight}%)
           </div>
-          <div
-            style={{
-              color: COLORS.muted,
-              fontSize: 8,
-              marginTop: 2,
-            }}
-          >
-            Bobot {weight}%
-          </div>
-        </div>
-
-        <div
-          style={{
-            color: performanceColor,
-            fontSize: 14,
-            fontWeight: 900,
-            whiteSpace: "nowrap",
-          }}
-        >
-          {fmtPct(achievement)}
-        </div>
-
-        <div
-          style={{
-            color: COLORS.muted,
-            fontSize: 15,
-            width: 18,
-            textAlign: "center",
-            flexShrink: 0,
-          }}
-        >
-          {open ? "⌃" : "⌄"}
-        </div>
-      </button>
-
-      {open && (
-        <div id={`section-${id}`} style={{ padding: "0 14px 14px" }}>
           {badge && (
             <div
               style={{
                 display: "inline-block",
-                marginBottom: 10,
+                marginTop: 5,
                 padding: "3px 8px",
                 borderRadius: 999,
-                background: `${performanceColor}20`,
-                color: performanceColor,
-                fontSize: 9,
+                background: `${sectionColor}20`,
+                color: sectionColor,
+                fontSize: 8,
                 fontWeight: 800,
               }}
             >
               {badge}
             </div>
           )}
-
-          {children}
-
-          <div
-            style={{
-              marginTop: 12,
-              paddingTop: 10,
-              borderTop: `1px solid ${COLORS.border}`,
-              display: "grid",
-              gridTemplateColumns: "repeat(2,minmax(0,1fr))",
-              gap: 7,
-            }}
-          >
-            <div
-              style={{
-                background: "#0d1423",
-                border: `1px solid ${performanceColor}35`,
-                borderRadius: 9,
-                padding: "8px 9px",
-              }}
-            >
-              <div style={{ color: COLORS.muted, fontSize: 8 }}>Gap to Target</div>
-              <div style={{ color: gap > 0 ? COLORS.green : COLORS.red, fontSize: 11, fontWeight: 900, marginTop: 3 }}>
-                {gap > 0 ? "+" : ""}{fmtGapNumber(gap)}
-              </div>
-            </div>
-
-            <div
-              style={{
-                background: "#0d1423",
-                border: `1px solid ${COLORS.border}`,
-                borderRadius: 9,
-                padding: "8px 9px",
-              }}
-            >
-              <div style={{ color: COLORS.muted, fontSize: 8 }}>Sisa Hari</div>
-              <div style={{ color: COLORS.text, fontSize: 11, fontWeight: 900, marginTop: 3 }}>
-                {remainingDays} hari
-              </div>
-            </div>
-
-            <div
-              style={{
-                background: "#0d1423",
-                border: `1px solid ${COLORS.border}`,
-                borderRadius: 9,
-                padding: "8px 9px",
-              }}
-            >
-              <div style={{ color: COLORS.muted, fontSize: 8 }}>Target / Hari</div>
-              <div style={{ color: performanceColor, fontSize: 11, fontWeight: 900, marginTop: 3 }}>
-                {fmtGapNumber(targetPerDay)}
-              </div>
-            </div>
-
-            <div
-              style={{
-                background: "#0d1423",
-                border: `1px solid ${COLORS.border}`,
-                borderRadius: 9,
-                padding: "8px 9px",
-              }}
-            >
-              <div style={{ color: COLORS.muted, fontSize: 8 }}>Time Factor</div>
-              <div style={{ color: statusColor(timeFactor), fontSize: 11, fontWeight: 900, marginTop: 3 }}>
-                {fmtPct(timeFactor)}
-              </div>
-            </div>
-          </div>
-
-          <div
-            style={{
-              marginTop: 7,
-              background: "#0d1423",
-              border: `1px solid ${gapToTf >= 0 ? COLORS.green : COLORS.red}45`,
-              borderRadius: 9,
-              padding: "8px 9px",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: 8,
-            }}
-          >
-            <div>
-              <div style={{ color: COLORS.muted, fontSize: 8 }}>Gap to TF</div>
-              <div style={{ color: gapToTf >= 0 ? COLORS.green : COLORS.red, fontSize: 11, fontWeight: 900, marginTop: 3 }}>
-                {gapToTf >= 0 ? "+" : ""}{fmtPct(gapToTf)}
-              </div>
-            </div>
-            <div
-              style={{
-                color: gapToTf >= 0 ? COLORS.green : COLORS.red,
-                fontSize: 8,
-                fontWeight: 800,
-                textAlign: "right",
-              }}
-            >
-              {gapToTf >= 0 ? "Di atas Time Factor" : "Di bawah Time Factor"}
-            </div>
-          </div>
-
-          <div
-            style={{
-              marginTop: 10,
-              color: COLORS.muted,
-              fontSize: 9,
-            }}
-          >
-            ⓘ Bobot: {weight}% dari total Penawaran Langsung
-          </div>
         </div>
-      )}
+      </div>
+
+      <div style={{ marginTop: 10 }}>
+        {children}
+      </div>
+
+      <div
+        style={{
+          marginTop: 10,
+          paddingTop: 9,
+          borderTop: `1px solid ${COLORS.border}`,
+          color: COLORS.muted,
+          fontSize: 8,
+        }}
+      >
+        ⓘ Bobot: {weight}% dari total Penawaran Langsung
+      </div>
     </section>
   );
 }
 
-function PerformanceCards({ achievement, remainingDays, timeFactor }) {
-  const currentAchievement = Number(achievement || 0);
-  const gap = currentAchievement - 100;
-  const gapToTarget = Math.abs(Math.min(0, gap));
-  const requiredPerDay = remainingDays > 0
-    ? gapToTarget / remainingDays
-    : 0;
-  const performanceColor = statusColor(currentAchievement);
-  const tfGap = currentAchievement - Number(timeFactor || 0);
-  const tfColor = tfGap >= 0 ? COLORS.green : COLORS.red;
+function PerformanceCards({ pwp, psm, sg, remainingDays }) {
+  const makeCard = (label, stat, color) => {
+    const gap = Number(stat?.gap || 0);
+    const targetPerDay = Number(stat?.targetPerDay || 0);
+    const achievement = Number(stat?.achievement || 0);
+    const accent = performanceColor(achievement);
 
-  const cardStyle = {
-    background: COLORS.panel,
-    border: `1px solid ${COLORS.border}`,
-    borderRadius: 12,
-    padding: 12,
-    minWidth: 0,
+    return (
+      <div
+        style={{
+          minWidth: 0,
+          background:
+            `radial-gradient(circle at 100% 0%, ${accent}20 0%, transparent 58%), ${COLORS.panel}`,
+          border: `1px solid ${accent}99`,
+          borderRadius: 12,
+          padding: "10px 10px 9px",
+          boxShadow: `0 0 14px ${accent}12`,
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            color: color || accent,
+            fontSize: 12,
+            fontWeight: 900,
+          }}
+        >
+          <span>{label}</span>
+          <span style={{ marginLeft: "auto", color: COLORS.muted, fontSize: 13 }}>›</span>
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(0,1fr) 1px minmax(0,1fr)",
+            gap: 8,
+            marginTop: 10,
+            alignItems: "stretch",
+          }}
+        >
+          <div style={{ minWidth: 0 }}>
+            <div style={{ color: COLORS.muted, fontSize: 8 }}>Gap</div>
+            <div
+              style={{
+                color: gap > 0 ? COLORS.green : gap < 0 ? COLORS.red : COLORS.text,
+                fontSize: 15,
+                fontWeight: 900,
+                marginTop: 4,
+                whiteSpace: "nowrap",
+              }}
+            >
+              {gap > 0 ? "+" : ""}{fmtGapNumber(gap)}
+            </div>
+          </div>
+
+          <div style={{ background: COLORS.border, width: 1 }} />
+
+          <div style={{ minWidth: 0 }}>
+            <div style={{ color: COLORS.muted, fontSize: 8 }}>Target / Hari</div>
+            <div
+              style={{
+                color: accent,
+                fontSize: 15,
+                fontWeight: 900,
+                marginTop: 4,
+                whiteSpace: "nowrap",
+              }}
+            >
+              {targetPerDay > 0 ? "+" : ""}{fmtGapNumber(targetPerDay)}
+            </div>
+            <div style={{ color: COLORS.muted, fontSize: 7, marginTop: 2 }}>unit / hari</div>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -805,62 +742,9 @@ function PerformanceCards({ achievement, remainingDays, timeFactor }) {
         marginTop: 12,
       }}
     >
-      <div style={{ ...cardStyle, borderColor: `${performanceColor}55` }}>
-        <div style={{ color: COLORS.muted, fontSize: 8, fontWeight: 700 }}>
-          Gap
-        </div>
-        <div
-          style={{
-            color: gap >= 0 ? COLORS.green : COLORS.red,
-            fontSize: 15,
-            fontWeight: 900,
-            marginTop: 5,
-          }}
-        >
-          {gap >= 0 ? "+" : "-"}{fmtPct(Math.abs(gap))}
-        </div>
-        <div style={{ color: COLORS.muted, fontSize: 7, marginTop: 3 }}>
-          {gap >= 0 ? "Di atas target" : "Menuju 100%"}
-        </div>
-      </div>
-
-      <div style={cardStyle}>
-        <div style={{ color: COLORS.muted, fontSize: 8, fontWeight: 700 }}>
-          Target / Hari
-        </div>
-        <div
-          style={{
-            color: performanceColor,
-            fontSize: 15,
-            fontWeight: 900,
-            marginTop: 5,
-          }}
-        >
-          {fmtPct(requiredPerDay)}
-        </div>
-        <div style={{ color: COLORS.muted, fontSize: 7, marginTop: 3 }}>
-          Rata-rata gap / sisa hari
-        </div>
-      </div>
-
-      <div style={{ ...cardStyle, borderColor: `${statusColor(timeFactor)}55` }}>
-        <div style={{ color: COLORS.muted, fontSize: 8, fontWeight: 700 }}>
-          Time Factor
-        </div>
-        <div
-          style={{
-            color: statusColor(timeFactor),
-            fontSize: 15,
-            fontWeight: 900,
-            marginTop: 5,
-          }}
-        >
-          {fmtPct(timeFactor)}
-        </div>
-        <div style={{ color: tfColor, fontSize: 7, fontWeight: 800, marginTop: 3 }}>
-          {tfGap >= 0 ? "Di atas TF" : "Di bawah TF"}
-        </div>
-      </div>
+      {makeCard("PWP", pwp, COLORS.purple)}
+      {makeCard("PSM", psm, COLORS.orange)}
+      {makeCard("Serba Gratis", sg, COLORS.yellow)}
     </div>
   );
 }
@@ -2110,9 +1994,6 @@ export default function App() {
   const [targetPeriod, setTargetPeriod] =
     useState("current");
 
-  const [openSection, setOpenSection] =
-    useState(null);
-
   const restoreInputRef = useRef(null);
 
   const currentMonthKey =
@@ -2771,7 +2652,6 @@ export default function App() {
         setEditingId(null);
         setDashboardPeriod("current");
         setTargetPeriod("current");
-        setOpenSection(null);
 
         window.alert(
           "Data berhasil direstore."
@@ -2806,7 +2686,6 @@ export default function App() {
     setEditingId(null);
     setDashboardPeriod("current");
     setTargetPeriod("current");
-    setOpenSection(null);
 
     window.alert(
       "Semua data berhasil direset."
@@ -3015,14 +2894,10 @@ export default function App() {
             />
 
             <PerformanceCards
-              achievement={
-                kpi.apc.contribution +
-                kpi.pwp.contribution +
-                kpi.psm.contribution +
-                kpi.sg.contribution
-              }
+              pwp={sectionStats.pwp}
+              psm={sectionStats.psm}
+              sg={sectionStats.sg}
               remainingDays={dashboardRemainingDays}
-              timeFactor={dashboardTimeFactor}
             />
 
             <Section
@@ -3031,18 +2906,7 @@ export default function App() {
               title="APC"
               weight={25}
               icon="◎"
-              color={statusColor(sectionStats.apc.achievement)}
               achievement={sectionStats.apc.achievement}
-              open={openSection === "apc"}
-              onToggle={() =>
-                setOpenSection((current) =>
-                  current === "apc" ? null : "apc"
-                )
-              }
-              gap={sectionStats.apc.gap}
-              remainingDays={dashboardRemainingDays}
-              targetPerDay={sectionStats.apc.targetPerDay}
-              timeFactor={dashboardTimeFactor}
             >
               <ApcRow data={dashboardApc} />
             </Section>
@@ -3054,22 +2918,11 @@ export default function App() {
               weight={25}
               badge="Akumulasi PWP 1 + PWP 2"
               icon="🎁"
-              color={statusColor(sectionStats.pwp.achievement)}
               achievement={sectionStats.pwp.achievement}
-              open={openSection === "pwp"}
-              onToggle={() =>
-                setOpenSection((current) =>
-                  current === "pwp" ? null : "pwp"
-                )
-              }
-              gap={sectionStats.pwp.gap}
-              remainingDays={dashboardRemainingDays}
-              targetPerDay={sectionStats.pwp.targetPerDay}
-              timeFactor={dashboardTimeFactor}
             >
               <MetricRows
                 rows={dashboardPwp}
-                color={COLORS.purple}
+                color={performanceColor(sectionStats.pwp.achievement)}
                 weight={25}
               />
             </Section>
@@ -3081,22 +2934,11 @@ export default function App() {
               weight={20}
               badge="Akumulasi PSM 1 + PSM 2 + PSM 3 + PSM 4"
               icon="♟"
-              color={statusColor(sectionStats.psm.achievement)}
               achievement={sectionStats.psm.achievement}
-              open={openSection === "psm"}
-              onToggle={() =>
-                setOpenSection((current) =>
-                  current === "psm" ? null : "psm"
-                )
-              }
-              gap={sectionStats.psm.gap}
-              remainingDays={dashboardRemainingDays}
-              targetPerDay={sectionStats.psm.targetPerDay}
-              timeFactor={dashboardTimeFactor}
             >
               <MetricRows
                 rows={dashboardPsm}
-                color={COLORS.orange}
+                color={performanceColor(sectionStats.psm.achievement)}
                 weight={20}
               />
             </Section>
@@ -3108,22 +2950,11 @@ export default function App() {
               weight={30}
               badge="Akumulasi SG 1 + SG 2"
               icon="●"
-              color={statusColor(sectionStats.sg.achievement)}
               achievement={sectionStats.sg.achievement}
-              open={openSection === "sg"}
-              onToggle={() =>
-                setOpenSection((current) =>
-                  current === "sg" ? null : "sg"
-                )
-              }
-              gap={sectionStats.sg.gap}
-              remainingDays={dashboardRemainingDays}
-              targetPerDay={sectionStats.sg.targetPerDay}
-              timeFactor={dashboardTimeFactor}
             >
               <MetricRows
                 rows={dashboardSg}
-                color={COLORS.yellow}
+                color={performanceColor(sectionStats.sg.achievement)}
                 weight={30}
               />
             </Section>
