@@ -592,10 +592,11 @@ function Section({
     <section
       style={{
         background: `radial-gradient(circle at 100% 0%, ${sectionColor}16 0%, transparent 42%), ${COLORS.panel}`,
-        border: `1px solid ${sectionColor}70`,
-        borderRadius: 14,
+        border: `1px solid ${sectionColor}85`,
+        borderRadius: 16,
         padding: 14,
         marginTop: 14,
+        position: "relative",
         boxSizing: "border-box",
         boxShadow: `0 0 16px ${sectionColor}0f`,
       }}
@@ -631,11 +632,41 @@ function Section({
         </div>
       </div>
 
-      <div style={{ marginTop: 12, paddingTop: 11, borderTop: `1px solid ${COLORS.border}` }}>
+      <div
+        style={{
+          marginTop: 12,
+          padding: "10px 9px 8px",
+          borderRadius: 11,
+          background: COLORS.subpanel,
+          border: `1px solid ${COLORS.border}`,
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,.025)",
+        }}
+      >
         {children}
       </div>
 
-      <div style={{ marginTop: 12, paddingTop: 10, borderTop: `1px solid ${COLORS.border}`, display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 7 }}>
+      <div
+        style={{
+          marginTop: 12,
+          padding: "10px 9px 9px",
+          borderRadius: 11,
+          background: COLORS.subpanel,
+          border: `1px solid ${COLORS.border}`,
+        }}
+      >
+        <div
+          style={{
+            color: COLORS.muted,
+            fontSize: 8,
+            fontWeight: 800,
+            letterSpacing: ".04em",
+            marginBottom: 7,
+            textTransform: "uppercase",
+          }}
+        >
+          Monitoring Performa
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 7 }}>
         <div style={{ background: COLORS.subpanel, border: `1px solid ${COLORS.border}`, borderRadius: 9, padding: "8px 9px" }}>
           <div style={{ color: COLORS.muted, fontSize: 8 }}>Gap to Target</div>
           <div style={{ color: gap > 0 ? COLORS.green : gap < 0 ? COLORS.red : COLORS.text, fontSize: 11, fontWeight: 900, marginTop: 3 }}>
@@ -654,9 +685,10 @@ function Section({
           <div style={{ color: COLORS.muted, fontSize: 8 }}>Time Factor</div>
           <div style={{ color: gapToTf >= 0 ? COLORS.green : COLORS.red, fontSize: 11, fontWeight: 900, marginTop: 3 }}>{fmtPct(timeFactor)}</div>
         </div>
+        </div>
       </div>
 
-      <div style={{ marginTop: 7, background: COLORS.subpanel, border: `1px solid ${gapToTf >= 0 ? COLORS.green : COLORS.red}45`, borderRadius: 9, padding: "8px 9px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 }}>
+      <div style={{ marginTop: 8, background: COLORS.subpanel, border: `1px solid ${gapToTf >= 0 ? COLORS.green : COLORS.red}55`, borderRadius: 9, padding: "8px 9px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 }}>
         <div>
           <div style={{ color: COLORS.muted, fontSize: 8 }}>Gap to TF</div>
           <div style={{ color: gapToTf >= 0 ? COLORS.green : COLORS.red, fontSize: 11, fontWeight: 900, marginTop: 3 }}>{gapToTf >= 0 ? "+" : ""}{fmtPct(gapToTf)}</div>
@@ -680,7 +712,7 @@ function PerformanceCards({ pwp, psm, sg }) {
     const gap = Number(stat?.gap || 0);
     const targetPerDay = Number(stat?.targetPerDay || 0);
     return (
-      <div style={{ background: `radial-gradient(circle at 100% 0%, ${accent}18 0%, transparent 60%), ${COLORS.panel}`, border: `1px solid ${accent}75`, borderRadius: 12, padding: "10px 10px 9px", boxShadow: `0 0 14px ${accent}10` }}>
+      <div style={{ background: `radial-gradient(circle at 100% 0%, ${accent}18 0%, transparent 60%), ${COLORS.panel}`, border: `1px solid ${accent}99`, borderRadius: 11, padding: "10px 10px 9px", boxShadow: `inset 0 1px 0 ${accent}18, 0 0 14px ${accent}10` }}>
         <div style={{ display: "flex", alignItems: "center", gap: 6, color: baseColor, fontSize: 12, fontWeight: 900 }}>
           {label}<span style={{ marginLeft: "auto", color: COLORS.muted, fontSize: 14 }}>›</span>
         </div>
@@ -699,11 +731,30 @@ function PerformanceCards({ pwp, psm, sg }) {
       </div>
     );
   };
-  return <div style={{ display: "grid", gridTemplateColumns: "repeat(3,minmax(0,1fr))", gap: 8, marginTop: 12 }}>
-    {card("PWP", pwp, COLORS.purple)}
-    {card("PSM", psm, COLORS.orange)}
-    {card("Serba Gratis", sg, COLORS.yellow)}
-  </div>;
+  return (
+    <div
+      style={{
+        marginTop: 12,
+        padding: 9,
+        borderRadius: 14,
+        background: COLORS.panel,
+        border: `1px solid ${COLORS.border}`,
+        boxShadow: `0 6px 18px rgba(0,0,0,.14)`,
+      }}
+    >
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3,minmax(0,1fr))",
+          gap: 8,
+        }}
+      >
+        {card("PWP", pwp, COLORS.purple)}
+        {card("PSM", psm, COLORS.orange)}
+        {card("Serba Gratis", sg, COLORS.yellow)}
+      </div>
+    </div>
+  );
 }
 
 function MiniKpi({
