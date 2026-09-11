@@ -32,6 +32,56 @@ function statusColor(value) {
   return COLORS.red;
 }
 
+function fmtPct(value) {
+  return `${Number(value || 0).toFixed(1).replace('.', ',')}%`;
+}
+
+function getDaysInMonth(monthKey) {
+  if (!monthKey) return 0;
+  const [year, month] = monthKey.split('-').map(Number);
+  return new Date(year, month, 0).getDate();
+}
+
+function getTimeFactor(monthKey) {
+  const daysInMonth = getDaysInMonth(monthKey);
+  if (!daysInMonth) return 0;
+
+  const [year, month] = monthKey.split('-').map(Number);
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth() + 1;
+
+  if (year < currentYear || (year === currentYear && month < currentMonth)) {
+    return 100;
+  }
+
+  if (year > currentYear || (year === currentYear && month > currentMonth)) {
+    return 0;
+  }
+
+  return Math.min(100, (now.getDate() / daysInMonth) * 100);
+}
+
+function getRemainingDays(monthKey) {
+  const daysInMonth = getDaysInMonth(monthKey);
+  if (!daysInMonth) return 0;
+
+  const [year, month] = monthKey.split('-').map(Number);
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth() + 1;
+
+  if (year < currentYear || (year === currentYear && month < currentMonth)) return 0;
+  if (year > currentYear || (year === currentYear && month > currentMonth)) return daysInMonth;
+
+  return Math.max(0, daysInMonth - now.getDate());
+}
+
+function fmtGapNumber(value) {
+  const n = Number(value || 0);
+  return new Intl.NumberFormat('id-ID', { maximumFractionDigits: 1 }).format(n);
+}
+
 function localDateString() {
   const d = new Date();
   const year = d.getFullYear();
@@ -312,7 +362,7 @@ function MetricRows({ rows = [], color, weight }) {
                 whiteSpace: "nowrap",
               }}
             >
-              {achievement.toFixed(3)}%
+              {fmtPct(achievement)}
             </div>
 
             <div
@@ -324,7 +374,7 @@ function MetricRows({ rows = [], color, weight }) {
                 whiteSpace: "nowrap",
               }}
             >
-              {contribution.toFixed(2)}%
+              {fmtPct(contribution)}
             </div>
           </div>
         );
@@ -379,7 +429,7 @@ function MetricRows({ rows = [], color, weight }) {
             fontWeight: 800,
           }}
         >
-          {totalPct.toFixed(3)}%
+          {fmtPct(totalPct)}
         </div>
 
         <div
@@ -390,7 +440,7 @@ function MetricRows({ rows = [], color, weight }) {
             fontWeight: 800,
           }}
         >
-          {totalContribution.toFixed(2)}%
+          {fmtPct(totalContribution)}
         </div>
       </div>
     </div>
@@ -460,7 +510,7 @@ function ApcRow({ data }) {
             fontWeight: 800,
           }}
         >
-          {achievement.toFixed(3)}%
+          {fmtPct(achievement)}
         </div>
 
         <div
@@ -471,7 +521,7 @@ function ApcRow({ data }) {
             fontWeight: 800,
           }}
         >
-          {contribution.toFixed(2)}%
+          {fmtPct(contribution)}
         </div>
       </div>
     </div>
@@ -479,32 +529,52 @@ function ApcRow({ data }) {
 }
 
 function Section({
+  id,
   number,
   title,
   weight,
   badge,
   icon,
   color,
+  achievement,
+  open,
+  onToggle,
   children,
+  gap,
+  remainingDays,
+  targetPerDay,
+  timeFactor,
 }) {
+  const gapToTf = Number(achievement || 0) - Number(timeFactor || 0);
+
   return (
     <section
       style={{
         background: COLORS.panel,
         border: `1px solid ${color}45`,
         borderRadius: 14,
-        padding: 14,
+        padding: 0,
         marginTop: 14,
         boxSizing: "border-box",
         overflow: "hidden",
       }}
     >
-      <div
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={open}
+        aria-controls={`section-${id}`}
         style={{
+          width: "100%",
+          border: "none",
+          background: "transparent",
+          color: COLORS.text,
+          padding: "13px 14px",
           display: "flex",
           alignItems: "center",
           gap: 9,
-          marginBottom: 15,
+          textAlign: "left",
+          cursor: "pointer",
         }}
       >
         <div
@@ -517,29 +587,68 @@ function Section({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            flexShrink: 0,
             color,
             fontSize: 18,
+            flexShrink: 0,
           }}
         >
           {icon}
         </div>
 
-        <div>
+        <div style={{ minWidth: 0, flex: 1 }}>
           <div
             style={{
-              fontSize: 14,
-              fontWeight: 800,
+              fontSize: 13,
+              fontWeight: 900,
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
             }}
           >
-            {number}. {title} ({weight}%)
+            {title}
           </div>
+          <div
+            style={{
+              color: COLORS.muted,
+              fontSize: 8,
+              marginTop: 2,
+            }}
+          >
+            Bobot {weight}%
+          </div>
+        </div>
 
+        <div
+          style={{
+            color: statusColor(achievement),
+            fontSize: 14,
+            fontWeight: 900,
+            whiteSpace: "nowrap",
+          }}
+        >
+          {fmtPct(achievement)}
+        </div>
+
+        <div
+          style={{
+            color: COLORS.muted,
+            fontSize: 15,
+            width: 18,
+            textAlign: "center",
+            flexShrink: 0,
+          }}
+        >
+          {open ? "⌃" : "⌄"}
+        </div>
+      </button>
+
+      {open && (
+        <div id={`section-${id}`} style={{ padding: "0 14px 14px" }}>
           {badge && (
             <div
               style={{
                 display: "inline-block",
-                marginTop: 5,
+                marginBottom: 10,
                 padding: "3px 8px",
                 borderRadius: 999,
                 background: `${color}20`,
@@ -551,20 +660,118 @@ function Section({
               {badge}
             </div>
           )}
+
+          {children}
+
+          <div
+            style={{
+              marginTop: 12,
+              paddingTop: 10,
+              borderTop: `1px solid ${COLORS.border}`,
+              display: "grid",
+              gridTemplateColumns: "repeat(2,minmax(0,1fr))",
+              gap: 7,
+            }}
+          >
+            <div
+              style={{
+                background: "#0d1423",
+                border: `1px solid ${COLORS.border}`,
+                borderRadius: 9,
+                padding: "8px 9px",
+              }}
+            >
+              <div style={{ color: COLORS.muted, fontSize: 8 }}>Gap to Target</div>
+              <div style={{ color: gap > 0 ? COLORS.green : COLORS.red, fontSize: 11, fontWeight: 900, marginTop: 3 }}>
+                {fmtGapNumber(gap)}
+              </div>
+            </div>
+
+            <div
+              style={{
+                background: "#0d1423",
+                border: `1px solid ${COLORS.border}`,
+                borderRadius: 9,
+                padding: "8px 9px",
+              }}
+            >
+              <div style={{ color: COLORS.muted, fontSize: 8 }}>Sisa Hari</div>
+              <div style={{ color: COLORS.text, fontSize: 11, fontWeight: 900, marginTop: 3 }}>
+                {remainingDays} hari
+              </div>
+            </div>
+
+            <div
+              style={{
+                background: "#0d1423",
+                border: `1px solid ${COLORS.border}`,
+                borderRadius: 9,
+                padding: "8px 9px",
+              }}
+            >
+              <div style={{ color: COLORS.muted, fontSize: 8 }}>Target / Hari</div>
+              <div style={{ color: color, fontSize: 11, fontWeight: 900, marginTop: 3 }}>
+                {fmtGapNumber(targetPerDay)}
+              </div>
+            </div>
+
+            <div
+              style={{
+                background: "#0d1423",
+                border: `1px solid ${COLORS.border}`,
+                borderRadius: 9,
+                padding: "8px 9px",
+              }}
+            >
+              <div style={{ color: COLORS.muted, fontSize: 8 }}>Time Factor</div>
+              <div style={{ color: statusColor(timeFactor), fontSize: 11, fontWeight: 900, marginTop: 3 }}>
+                {fmtPct(timeFactor)}
+              </div>
+            </div>
+          </div>
+
+          <div
+            style={{
+              marginTop: 7,
+              background: "#0d1423",
+              border: `1px solid ${gapToTf >= 0 ? COLORS.green : COLORS.red}45`,
+              borderRadius: 9,
+              padding: "8px 9px",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: 8,
+            }}
+          >
+            <div>
+              <div style={{ color: COLORS.muted, fontSize: 8 }}>Gap to TF</div>
+              <div style={{ color: gapToTf >= 0 ? COLORS.green : COLORS.red, fontSize: 11, fontWeight: 900, marginTop: 3 }}>
+                {gapToTf >= 0 ? "+" : ""}{fmtPct(gapToTf)}
+              </div>
+            </div>
+            <div
+              style={{
+                color: gapToTf >= 0 ? COLORS.green : COLORS.red,
+                fontSize: 8,
+                fontWeight: 800,
+                textAlign: "right",
+              }}
+            >
+              {gapToTf >= 0 ? "Di atas Time Factor" : "Di bawah Time Factor"}
+            </div>
+          </div>
+
+          <div
+            style={{
+              marginTop: 10,
+              color: COLORS.muted,
+              fontSize: 9,
+            }}
+          >
+            ⓘ Bobot: {weight}% dari total Penawaran Langsung
+          </div>
         </div>
-      </div>
-
-      {children}
-
-      <div
-        style={{
-          marginTop: 12,
-          color: COLORS.muted,
-          fontSize: 9,
-        }}
-      >
-        ⓘ Bobot: {weight}% dari total Penawaran Langsung
-      </div>
+      )}
     </section>
   );
 }
@@ -658,7 +865,7 @@ function MiniKpi({
               marginTop: 3,
             }}
           >
-            {achievement.toFixed(2)}%
+            {fmtPct(achievement)}
           </div>
         </div>
 
@@ -680,7 +887,7 @@ function MiniKpi({
               marginTop: 3,
             }}
           >
-            {contribution.toFixed(2)}%
+            {fmtPct(contribution)}
           </div>
         </div>
       </div>
@@ -748,7 +955,7 @@ function DirectSummary({ value }) {
             fontWeight: 900,
           }}
         >
-          {percentage.toFixed(2)}%
+          {fmtPct(percentage)}
         </div>
 
         <div
@@ -759,7 +966,7 @@ function DirectSummary({ value }) {
             fontWeight: 900,
           }}
         >
-          {percentage.toFixed(2)}%
+          {fmtPct(percentage)}
         </div>
       </div>
 
@@ -1950,6 +2157,9 @@ export default function App() {
   const [targetPeriod, setTargetPeriod] =
     useState("current");
 
+  const [openSection, setOpenSection] =
+    useState(null);
+
   const restoreInputRef = useRef(null);
 
   const currentMonthKey =
@@ -2231,6 +2441,43 @@ export default function App() {
     dashboardPsm,
     dashboardSg,
   ]);
+
+  /* =====================================================
+     DETAIL GAP & TIME FACTOR DASHBOARD
+  ===================================================== */
+
+  const dashboardTimeFactor = getTimeFactor(selectedMonthKey);
+  const dashboardRemainingDays = getRemainingDays(selectedMonthKey);
+
+  const sectionStats = {
+    apc: {
+      target: Number(dashboardApc.target || 0),
+      achieved: Number(dashboardApc.achieved || 0),
+      achievement: kpi.apc.achievement,
+    },
+    pwp: {
+      target: dashboardPwp.reduce((s, x) => s + Number(x.target || 0), 0),
+      achieved: dashboardPwp.reduce((s, x) => s + Number(x.achieved || 0), 0),
+      achievement: kpi.pwp.achievement,
+    },
+    psm: {
+      target: dashboardPsm.reduce((s, x) => s + Number(x.target || 0), 0),
+      achieved: dashboardPsm.reduce((s, x) => s + Number(x.achieved || 0), 0),
+      achievement: kpi.psm.achievement,
+    },
+    sg: {
+      target: dashboardSg.reduce((s, x) => s + Number(x.target || 0), 0),
+      achieved: dashboardSg.reduce((s, x) => s + Number(x.achieved || 0), 0),
+      achievement: kpi.sg.achievement,
+    },
+  };
+
+  Object.values(sectionStats).forEach((item) => {
+    item.gap = item.target - item.achieved;
+    item.targetPerDay = dashboardRemainingDays > 0
+      ? Math.max(0, item.gap) / dashboardRemainingDays
+      : 0;
+  });
 
   /* =====================================================
      COMMIT
@@ -2571,6 +2818,7 @@ export default function App() {
         setEditingId(null);
         setDashboardPeriod("current");
         setTargetPeriod("current");
+        setOpenSection(null);
 
         window.alert(
           "Data berhasil direstore."
@@ -2605,6 +2853,7 @@ export default function App() {
     setEditingId(null);
     setDashboardPeriod("current");
     setTargetPeriod("current");
+    setOpenSection(null);
 
     window.alert(
       "Semua data berhasil direset."
@@ -2813,22 +3062,46 @@ export default function App() {
             />
 
             <Section
+              id="apc"
               number="1"
-              title="APC vs Target"
+              title="APC"
               weight={25}
               icon="◎"
               color={COLORS.blue}
+              achievement={sectionStats.apc.achievement}
+              open={openSection === "apc"}
+              onToggle={() =>
+                setOpenSection((current) =>
+                  current === "apc" ? null : "apc"
+                )
+              }
+              gap={sectionStats.apc.gap}
+              remainingDays={dashboardRemainingDays}
+              targetPerDay={sectionStats.apc.targetPerDay}
+              timeFactor={dashboardTimeFactor}
             >
               <ApcRow data={dashboardApc} />
             </Section>
 
             <Section
+              id="pwp"
               number="2"
-              title="PWP Total"
+              title="PWP"
               weight={25}
               badge="Akumulasi PWP 1 + PWP 2"
               icon="🎁"
               color={COLORS.purple}
+              achievement={sectionStats.pwp.achievement}
+              open={openSection === "pwp"}
+              onToggle={() =>
+                setOpenSection((current) =>
+                  current === "pwp" ? null : "pwp"
+                )
+              }
+              gap={sectionStats.pwp.gap}
+              remainingDays={dashboardRemainingDays}
+              targetPerDay={sectionStats.pwp.targetPerDay}
+              timeFactor={dashboardTimeFactor}
             >
               <MetricRows
                 rows={dashboardPwp}
@@ -2838,12 +3111,24 @@ export default function App() {
             </Section>
 
             <Section
+              id="psm"
               number="3"
-              title="PSM Total"
+              title="PSM"
               weight={20}
               badge="Akumulasi PSM 1 + PSM 2 + PSM 3 + PSM 4"
               icon="♟"
               color={COLORS.orange}
+              achievement={sectionStats.psm.achievement}
+              open={openSection === "psm"}
+              onToggle={() =>
+                setOpenSection((current) =>
+                  current === "psm" ? null : "psm"
+                )
+              }
+              gap={sectionStats.psm.gap}
+              remainingDays={dashboardRemainingDays}
+              targetPerDay={sectionStats.psm.targetPerDay}
+              timeFactor={dashboardTimeFactor}
             >
               <MetricRows
                 rows={dashboardPsm}
@@ -2853,12 +3138,24 @@ export default function App() {
             </Section>
 
             <Section
+              id="sg"
               number="4"
-              title="Serba Gratis Total"
+              title="Serba Gratis"
               weight={30}
               badge="Akumulasi SG 1 + SG 2"
               icon="●"
               color={COLORS.yellow}
+              achievement={sectionStats.sg.achievement}
+              open={openSection === "sg"}
+              onToggle={() =>
+                setOpenSection((current) =>
+                  current === "sg" ? null : "sg"
+                )
+              }
+              gap={sectionStats.sg.gap}
+              remainingDays={dashboardRemainingDays}
+              targetPerDay={sectionStats.sg.targetPerDay}
+              timeFactor={dashboardTimeFactor}
             >
               <MetricRows
                 rows={dashboardSg}
