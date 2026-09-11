@@ -531,7 +531,7 @@ function ApcRow({ data }) {
             fontWeight: 800,
           }}
         >
-          {fmt(data.target)}
+          Rp{fmt(data.target)}
         </div>
 
         <div
@@ -542,7 +542,7 @@ function ApcRow({ data }) {
             fontWeight: 800,
           }}
         >
-          {fmt(data.achieved)}
+          Rp{fmt(data.achieved)}
         </div>
 
         <div
@@ -587,161 +587,81 @@ function Section({
 }) {
   const sectionColor = performanceColor(achievement);
   const gapToTf = Number(achievement || 0) - Number(timeFactor || 0);
+  const tfGood = gapToTf >= 0;
 
   return (
     <section
+      className="dashboard-section"
       style={{
-        background: `radial-gradient(circle at 100% 0%, ${sectionColor}16 0%, transparent 42%), ${COLORS.panel}`,
-        border: `1px solid ${sectionColor}85`,
+        background: `radial-gradient(circle at 100% 0%, ${sectionColor}18 0%, transparent 42%), ${COLORS.panel}`,
+        border: `1px solid ${sectionColor}80`,
         borderRadius: 16,
         padding: 14,
         marginTop: 14,
-        position: "relative",
         boxSizing: "border-box",
-        boxShadow: `0 0 16px ${sectionColor}0f`,
+        boxShadow: `0 0 18px ${sectionColor}10`,
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
-        <div
-          style={{
-            width: 34,
-            height: 34,
-            borderRadius: 10,
-            background: `${sectionColor}20`,
-            border: `1px solid ${sectionColor}45`,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: sectionColor,
-            fontSize: 18,
-            flexShrink: 0,
-          }}
-        >{icon}</div>
-        <div style={{ minWidth: 0, flex: 1 }}>
-          <div style={{ fontSize: 13, fontWeight: 900, color: sectionColor }}>
-            {number}. {title} ({weight}%)
+      <div className="section-main">
+        <div className="section-heading" style={{ display: "flex", alignItems: "center", gap: 9 }}>
+          <div style={{ width: 38, height: 38, borderRadius: 12, background: `${sectionColor}20`, border: `1px solid ${sectionColor}45`, display: "flex", alignItems: "center", justifyContent: "center", color: sectionColor, fontSize: 19, flexShrink: 0 }}>{icon}</div>
+          <div style={{ minWidth: 0, flex: 1 }}>
+            <div style={{ fontSize: 14, fontWeight: 900, color: sectionColor }}>{number}. {title} ({weight}%)</div>
+            {badge && <div style={{ display: "inline-block", marginTop: 5, padding: "3px 9px", borderRadius: 999, background: `${sectionColor}20`, color: sectionColor, fontSize: 8, fontWeight: 800 }}>{badge}</div>}
           </div>
-          {badge && (
-            <div style={{ display: "inline-block", marginTop: 5, padding: "3px 8px", borderRadius: 999, background: `${sectionColor}20`, color: sectionColor, fontSize: 8, fontWeight: 800 }}>
-              {badge}
-            </div>
-          )}
+          <div style={{ color: sectionColor, fontSize: 15, fontWeight: 900, whiteSpace: "nowrap", border: `1px solid ${sectionColor}70`, borderRadius: 999, padding: "5px 9px" }}>{fmtPct(achievement)}</div>
         </div>
-        <div style={{ color: sectionColor, fontSize: 14, fontWeight: 900, whiteSpace: "nowrap" }}>
-          {fmtPct(achievement)}
-        </div>
-      </div>
 
-      <div
-        style={{
-          marginTop: 12,
-          paddingTop: 12,
-          borderTop: `1px solid ${sectionColor}35`,
-        }}
-      >
-        {children}
-      </div>
-
-      <div
-        style={{
-          marginTop: 12,
-          padding: "10px 9px 9px",
-          borderRadius: 11,
-          background: COLORS.subpanel,
-          border: `1px solid ${COLORS.border}`,
-        }}
-      >
-        <div
-          style={{
-            color: COLORS.muted,
-            fontSize: 8,
-            fontWeight: 800,
-            letterSpacing: ".04em",
-            marginBottom: 7,
-            textTransform: "uppercase",
-          }}
-        >
-          Monitoring Performa
+        <div style={{ marginTop: 12, paddingTop: 11, borderTop: `1px solid ${COLORS.border}` }}>
+          {children}
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 7 }}>
-        <div style={{ background: COLORS.subpanel, border: `1px solid ${COLORS.border}`, borderRadius: 9, padding: "8px 9px" }}>
-          <div style={{ color: COLORS.muted, fontSize: 8 }}>Gap to Target</div>
-          <div style={{ color: gap > 0 ? COLORS.green : gap < 0 ? COLORS.red : COLORS.text, fontSize: 11, fontWeight: 900, marginTop: 3 }}>
-            {gap > 0 ? "+" : ""}{fmtGapNumber(gap)}
+
+        <div className="gap-tf-box" style={{ marginTop: 10, background: COLORS.subpanel, border: `1px solid ${tfGood ? COLORS.green : COLORS.red}65`, borderRadius: 10, padding: "8px 10px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 }}>
+          <div>
+            <div style={{ color: COLORS.muted, fontSize: 8 }}>Gap to TF</div>
+            <div style={{ color: tfGood ? COLORS.green : COLORS.red, fontSize: 11, fontWeight: 900, marginTop: 3 }}>{tfGood ? "+" : ""}{fmtPct(gapToTf)}</div>
           </div>
+          <div style={{ color: tfGood ? COLORS.green : COLORS.red, fontSize: 8, fontWeight: 800, textAlign: "right" }}>{tfGood ? "Di atas Time Factor" : "Di bawah Time Factor"}</div>
         </div>
-        <div style={{ background: COLORS.subpanel, border: `1px solid ${COLORS.border}`, borderRadius: 9, padding: "8px 9px" }}>
-          <div style={{ color: COLORS.muted, fontSize: 8 }}>Sisa Hari</div>
-          <div style={{ color: COLORS.text, fontSize: 11, fontWeight: 900, marginTop: 3 }}>{remainingDays} hari</div>
-        </div>
-        <div style={{ background: COLORS.subpanel, border: `1px solid ${COLORS.border}`, borderRadius: 9, padding: "8px 9px" }}>
-          <div style={{ color: COLORS.muted, fontSize: 8 }}>Target / Hari</div>
-          <div style={{ color: sectionColor, fontSize: 11, fontWeight: 900, marginTop: 3 }}>{fmtGapNumber(targetPerDay)}</div>
-        </div>
-        <div style={{ background: COLORS.subpanel, border: `1px solid ${COLORS.border}`, borderRadius: 9, padding: "8px 9px" }}>
-          <div style={{ color: COLORS.muted, fontSize: 8 }}>Time Factor</div>
-          <div style={{ color: gapToTf >= 0 ? COLORS.green : COLORS.red, fontSize: 11, fontWeight: 900, marginTop: 3 }}>{fmtPct(timeFactor)}</div>
-        </div>
-        </div>
+        <div style={{ marginTop: 9, color: COLORS.muted, fontSize: 9 }}>ⓘ Bobot: {weight}% dari total Penawaran Langsung</div>
       </div>
 
-      <div style={{ marginTop: 8, background: COLORS.subpanel, border: `1px solid ${gapToTf >= 0 ? COLORS.green : COLORS.red}55`, borderRadius: 9, padding: "8px 9px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 }}>
-        <div>
-          <div style={{ color: COLORS.muted, fontSize: 8 }}>Gap to TF</div>
-          <div style={{ color: gapToTf >= 0 ? COLORS.green : COLORS.red, fontSize: 11, fontWeight: 900, marginTop: 3 }}>{gapToTf >= 0 ? "+" : ""}{fmtPct(gapToTf)}</div>
+      <div className="section-monitor" style={{ borderLeft: `1px solid ${COLORS.border}`, paddingLeft: 14, boxSizing: "border-box" }}>
+        <div style={{ color: COLORS.blue, fontSize: 10, fontWeight: 800, marginBottom: 8 }}>▥ &nbsp;Monitoring Performa</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", border: `1px solid ${COLORS.border}`, borderRadius: 11, overflow: "hidden", background: `${COLORS.bg}55` }}>
+          <div style={{ padding: "9px 10px", borderRight: `1px solid ${COLORS.border}`, borderBottom: `1px solid ${COLORS.border}` }}><div style={{ color: COLORS.muted, fontSize: 8 }}>Gap to Target</div><div style={{ color: gap > 0 ? COLORS.green : gap < 0 ? COLORS.red : COLORS.text, fontSize: 12, fontWeight: 900, marginTop: 3 }}>{gap > 0 ? "+" : ""}{fmtGapNumber(gap)}</div></div>
+          <div style={{ padding: "9px 10px", borderBottom: `1px solid ${COLORS.border}` }}><div style={{ color: COLORS.muted, fontSize: 8 }}>Sisa Hari</div><div style={{ color: COLORS.text, fontSize: 12, fontWeight: 900, marginTop: 3 }}>{remainingDays} hari</div></div>
+          <div style={{ padding: "9px 10px", borderRight: `1px solid ${COLORS.border}` }}><div style={{ color: COLORS.muted, fontSize: 8 }}>Target / Hari</div><div style={{ color: COLORS.text, fontSize: 12, fontWeight: 900, marginTop: 3 }}>{fmtGapNumber(targetPerDay)}</div></div>
+          <div style={{ padding: "9px 10px" }}><div style={{ color: COLORS.muted, fontSize: 8 }}>Time Factor</div><div style={{ color: tfGood ? COLORS.green : COLORS.red, fontSize: 12, fontWeight: 900, marginTop: 3 }}>{fmtPct(timeFactor)}</div></div>
         </div>
-        <div style={{ color: gapToTf >= 0 ? COLORS.green : COLORS.red, fontSize: 8, fontWeight: 800, textAlign: "right" }}>
-          {gapToTf >= 0 ? "Di atas Time Factor" : "Di bawah Time Factor"}
-        </div>
-      </div>
-
-      <div style={{ marginTop: 10, color: COLORS.muted, fontSize: 9 }}>
-        ⓘ Bobot: {weight}% dari total Penawaran Langsung
       </div>
     </section>
   );
 }
 
 function PerformanceCards({ pwp, psm, sg }) {
-  const card = (label, stat, baseColor) => {
+  const card = (label, stat, baseColor, subtitle) => {
     const achievement = Number(stat?.achievement || 0);
     const accent = performanceColor(achievement);
     const gap = Number(stat?.gap || 0);
     const targetPerDay = Number(stat?.targetPerDay || 0);
     return (
-      <div style={{ background: `radial-gradient(circle at 100% 0%, ${accent}18 0%, transparent 60%), ${COLORS.panel}`, border: `1px solid ${accent}99`, borderRadius: 11, padding: "10px 10px 9px", boxShadow: `inset 0 1px 0 ${accent}18, 0 0 14px ${accent}10` }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 6, color: baseColor, fontSize: 12, fontWeight: 900 }}>
-          {label}<span style={{ marginLeft: "auto", color: COLORS.muted, fontSize: 14 }}>›</span>
+      <div style={{ background: `radial-gradient(circle at 100% 0%, ${accent}18 0%, transparent 60%), ${COLORS.panel}`, border: `1px solid ${accent}80`, borderRadius: 14, padding: 12, boxShadow: `0 0 16px ${accent}0d` }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 6, color: baseColor, fontSize: 13, fontWeight: 900 }}><span>{label}</span><span style={{ marginLeft: "auto", color: COLORS.muted, fontSize: 16 }}>›</span></div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1px 1fr", gap: 10, marginTop: 10 }}>
+          <div><div style={{ color: COLORS.muted, fontSize: 8 }}>Gap</div><div style={{ color: gap >= 0 ? COLORS.green : COLORS.red, fontSize: 15, fontWeight: 900, marginTop: 4 }}>{gap > 0 ? "+" : ""}{fmtGapNumber(gap)}</div></div>
+          <div style={{ background: COLORS.border }} />
+          <div><div style={{ color: COLORS.muted, fontSize: 8 }}>Target / Hari</div><div style={{ color: targetPerDay > 0 ? COLORS.red : COLORS.green, fontSize: 15, fontWeight: 900, marginTop: 4 }}>{targetPerDay > 0 ? "+" : ""}{fmtGapNumber(targetPerDay)}</div><div style={{ color: COLORS.muted, fontSize: 7, marginTop: 2 }}>unit / hari</div></div>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) 1px minmax(0,1fr)", gap: 8, marginTop: 9 }}>
-          <div>
-            <div style={{ color: COLORS.muted, fontSize: 8 }}>Gap</div>
-            <div style={{ color: gap >= 0 ? COLORS.green : COLORS.red, fontSize: 14, fontWeight: 900, marginTop: 4, whiteSpace: "nowrap" }}>{gap > 0 ? "+" : ""}{fmtGapNumber(gap)}</div>
-          </div>
-          <div style={{ width: 1, background: COLORS.border }} />
-          <div>
-            <div style={{ color: COLORS.muted, fontSize: 8 }}>Target / Hari</div>
-            <div style={{ color: accent, fontSize: 14, fontWeight: 900, marginTop: 4, whiteSpace: "nowrap" }}>{targetPerDay > 0 ? "+" : ""}{fmtGapNumber(targetPerDay)}</div>
-            <div style={{ color: COLORS.muted, fontSize: 7, marginTop: 2 }}>unit / hari</div>
-          </div>
-        </div>
+        <div style={{ color: COLORS.muted, fontSize: 8, marginTop: 9 }}>{subtitle}</div>
       </div>
     );
   };
-  return (
-    <div
-      style={{
-        marginTop: 12,
-        display: "grid",
-        gridTemplateColumns: "repeat(3,minmax(0,1fr))",
-        gap: 8,
-      }}
-    >
-      {card("PWP", pwp, COLORS.purple)}
-      {card("PSM", psm, COLORS.orange)}
-      {card("Serba Gratis", sg, COLORS.yellow)}
-    </div>
-  );
+  return <div className="performance-cards" style={{ display: "grid", gridTemplateColumns: "repeat(3,minmax(0,1fr))", gap: 10, marginTop: 12 }}>
+    {card("PWP", pwp, COLORS.purple, "Akumulasi PWP 1 + PWP 2")}
+    {card("PSM", psm, COLORS.orange, "Akumulasi PSM 1 + PSM 2 + PSM 3 + PSM 4")}
+    {card("Serba Gratis", sg, COLORS.yellow, "Akumulasi SG 1 + SG 2")}
+  </div>;
 }
 
 function MiniKpi({
@@ -2821,6 +2741,24 @@ export default function App() {
     );
   }
 
+  const dashboardResponsiveStyles = `
+    .dashboard-section { display:grid; grid-template-columns:minmax(0,1.65fr) minmax(280px,.95fr); gap:14px; }
+    .section-main { min-width:0; }
+    .section-monitor { min-width:0; }
+    .dashboard-overview { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr); gap:12px; }
+    @media (max-width: 760px) {
+      .dashboard-overview { grid-template-columns:1fr; }
+      .dashboard-section { grid-template-columns:1fr; }
+      .section-monitor { border-left:0 !important; border-top:1px solid ${COLORS.border}; padding-left:0 !important; padding-top:12px; }
+      .performance-cards { grid-template-columns:repeat(3,minmax(0,1fr)) !important; }
+    }
+    @media (max-width: 430px) {
+      .performance-cards { gap:7px !important; }
+      .performance-cards > div { padding:10px 8px !important; }
+      .performance-cards > div > div:first-child { font-size:11px !important; }
+    }
+  `;
+
   /* =====================================================
      RENDER
   ===================================================== */
@@ -2860,10 +2798,12 @@ export default function App() {
         </div>
       </header>
 
+      <style>{dashboardResponsiveStyles}</style>
+
       <main
         style={{
           width: "100%",
-          maxWidth: 720,
+          maxWidth: 1100,
           margin: "0 auto",
           padding: "12px 14px",
           boxSizing: "border-box",
@@ -2876,6 +2816,7 @@ export default function App() {
 
         {activeTab === "dashboard" && (
           <>
+            <div className="dashboard-overview">
             <section
               style={{
                 background: COLORS.panel,
@@ -3014,6 +2955,8 @@ export default function App() {
                 kpi.sg.contribution
               }
             />
+
+            </div>
 
             <PerformanceCards
               pwp={sectionStats.pwp}
