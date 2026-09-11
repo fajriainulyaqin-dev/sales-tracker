@@ -120,6 +120,31 @@ function getRemainingDays(monthKey) {
   return Math.max(0, daysInMonth - now.getDate());
 }
 
+
+/* Sisa hari untuk periode aktif Penawaran Langsung.
+   Hari ini ikut dihitung. Dipakai PWP, PSM, dan Serba Gratis.
+   APC tetap memakai acuan hari dalam bulan seperti sebelumnya. */
+function getActivePeriodRemainingDays(type, date = new Date()) {
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+  const daysInMonth = new Date(year, month, 0).getDate();
+
+  if (type === "pwp" || type === "sg") {
+    if (day <= 15) return 15 - day + 1;
+    return daysInMonth - day + 1;
+  }
+
+  if (type === "psm") {
+    if (day <= 7) return 7 - day + 1;
+    if (day <= 15) return 15 - day + 1;
+    if (day <= 22) return 22 - day + 1;
+    return daysInMonth - day + 1;
+  }
+
+  return getRemainingDays(`${year}-${String(month).padStart(2, "0")}`);
+}
+
 function fmtGapNumber(value) {
   const n = Number(value || 0);
   return new Intl.NumberFormat('id-ID', { maximumFractionDigits: 1 }).format(n);
@@ -2412,6 +2437,16 @@ export default function App() {
   const dashboardTimeFactor = getTimeFactor(selectedMonthKey);
   const dashboardRemainingDays = getRemainingDays(selectedMonthKey);
 
+  // APC tetap menggunakan sisa hari bulan.
+  // PWP/PSM/SG menggunakan sisa hari SUB-PERIODE yang sedang aktif,
+  // dengan hari ini ikut dihitung.
+  const currentPeriodRemainingDays = {
+    apc: dashboardRemainingDays,
+    pwp: getActivePeriodRemainingDays("pwp"),
+    psm: getActivePeriodRemainingDays("psm"),
+    sg: getActivePeriodRemainingDays("sg"),
+  };
+
   const sectionStats = {
     apc: {
       target: Number(dashboardApc.target || 0),
@@ -2435,11 +2470,22 @@ export default function App() {
     },
   };
 
-  Object.values(sectionStats).forEach((item) => {
-    item.gap = item.target - item.achieved;
-    item.targetPerDay = dashboardRemainingDays > 0
-      ? Math.max(0, item.gap) / dashboardRemainingDays
+  Object.entries(sectionStats).forEach(([key, item]) => {
+    // GAP: Actual - Target
+    // Negatif = masih kurang, positif = sudah melewati target.
+    item.gap = item.achieved - item.target;
+
+    const remainingDays = currentPeriodRemainingDays[key];
+
+    // Target/Hari hanya menunjukkan kebutuhan yang masih kurang.
+    // Jika target sudah tercapai, kebutuhan harian = 0.
+    const remainingGap = Math.max(0, -item.gap);
+
+    item.targetPerDay = remainingDays > 0
+      ? remainingGap / remainingDays
       : 0;
+
+    item.remainingDays = remainingDays;
   });
 
   /* =====================================================
@@ -3029,7 +3075,7 @@ export default function App() {
               icon="◎"
               achievement={sectionStats.apc.achievement}
               gap={sectionStats.apc.gap}
-              remainingDays={dashboardRemainingDays}
+              remainingDays={sectionStats.apc.remainingDays}
               targetPerDay={sectionStats.apc.targetPerDay}
               timeFactor={dashboardTimeFactor}
             >
@@ -3045,7 +3091,7 @@ export default function App() {
               icon="🎁"
               achievement={sectionStats.pwp.achievement}
               gap={sectionStats.pwp.gap}
-              remainingDays={dashboardRemainingDays}
+              remainingDays={sectionStats.pwp.remainingDays}
               targetPerDay={sectionStats.pwp.targetPerDay}
               timeFactor={dashboardTimeFactor}
             >
@@ -3064,7 +3110,7 @@ export default function App() {
               icon="♟"
               achievement={sectionStats.psm.achievement}
               gap={sectionStats.psm.gap}
-              remainingDays={dashboardRemainingDays}
+              remainingDays={sectionStats.psm.remainingDays}
               targetPerDay={sectionStats.psm.targetPerDay}
               timeFactor={dashboardTimeFactor}
             >
@@ -3083,7 +3129,7 @@ export default function App() {
               icon="●"
               achievement={sectionStats.sg.achievement}
               gap={sectionStats.sg.gap}
-              remainingDays={dashboardRemainingDays}
+              remainingDays={sectionStats.sg.remainingDays}
               targetPerDay={sectionStats.sg.targetPerDay}
               timeFactor={dashboardTimeFactor}
             >
